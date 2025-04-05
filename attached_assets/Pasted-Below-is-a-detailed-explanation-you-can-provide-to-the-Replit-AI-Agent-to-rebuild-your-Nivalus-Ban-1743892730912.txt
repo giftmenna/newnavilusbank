@@ -1,0 +1,158 @@
+Below is a detailed explanation you can provide to the Replit AI Agent to rebuild your **Nivalus Bank** application with the features you’ve outlined. This explanation focuses on ensuring persistent authentication state across page reloads, admin and user functionalities, database storage (using your provided PostgreSQL database), and the specific requirements you’ve emphasized (e.g., admin creating users, transaction history with custom times, PIN confirmation, 20-second loading animation, and receipt generation). I’ll keep it clear and structured so the Replit Agent understands your needs, and I’ll avoid writing actual code as requested—just a thorough description.
+
+---
+
+### Explanation to Replit AI Agent
+
+Hello Replit AI Agent,
+
+I need you to rebuild my banking application, **Nivalus Bank**, to address previous challenges and implement a robust, persistent system that meets my specific requirements. My goal is to create a secure, user-friendly banking platform with two main sides: an **admin side** (for managing users and transactions) and a **user side** (for customers to perform banking activities). The most critical aspect is ensuring data persistence—user accounts, balances, and transaction history must not reset on logout, login, or browser refresh. Everything should be stored in my PostgreSQL database (details below), not in memory, to avoid data loss. Below, I’ll outline the key features, structure, and design preferences, emphasizing the admin and user functionalities you must prioritize.
+
+#### Project Overview
+- **Name**: Nivalus Bank
+- **Purpose**: A digital banking platform where admins can create and manage users and transactions, and users can sign up, log in, perform transactions, and view their history.
+- **Database**: Use my PostgreSQL database: `postgresql://neondb_owner:npg_lA4P7QpVorkf@ep-plain-cake-a22xs31f-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require`. Store all user data, balances, and transactions here.
+- **Language**: Use **Node.js** with **Express.js** for the backend (simple to set up and run) and **React** with **TypeScript** for the frontend (for a modern, responsive UI). Use **pg** (PostgreSQL client for Node.js) to connect to the database.
+- **Persistence**: Authentication state must persist across page reloads using `localStorage` for the token. Balances and transaction data must persist in the database, not reset on logout or refresh.
+- **Design**: Simple, mobile-friendly, and laptop-friendly UI with light/dark themes (auto-detect system preference). Use Tailwind CSS for styling.
+
+#### Database Structure
+- **Users Table**:
+  - `id` (serial, primary key)
+  - `username` (varchar, unique, not null)
+  - `password` (varchar, hashed with bcrypt, not null)
+  - `pin` (varchar, 4 digits, not null)
+  - `email` (varchar, unique, not null)
+  - `balance` (decimal, default 0.00, not null)
+  - `role` (enum: 'user', 'admin', default 'user')
+  - `status` (enum: 'active', 'inactive', 'deleted', default 'active')
+  - `last_login` (timestamp)
+  - `created_at` (timestamp, default now)
+  - `auth_token` (varchar, nullable, for session persistence)
+- **Transactions Table**:
+  - `id` (serial, primary key)
+  - `user_id` (integer, references users.id, not null)
+  - `type` (enum: 'deposit', 'withdrawal', 'transfer', not null)
+  - `amount` (decimal, not null)
+  - `recipient_info` (text, nullable, JSON string with recipient details)
+  - `timestamp` (timestamp, not null)
+  - `created_by` (integer, references users.id, nullable, for admin-created transactions)
+  - `receipt` (text, nullable, stores receipt data)
+
+#### Authentication Persistence
+- **Token Storage**: Use `localStorage` to store an authentication token (a JWT or simple hash) on the client after login or signup. Key: `nivalus_auth_token`.
+- **On Page Load**: Check `localStorage` for the token. If present, send it to `/api/user` to verify with the backend. If valid, restore the user’s session (set user state with role, balance, etc.). If invalid, clear the token and redirect to `/login`.
+- **Logout**: Remove the token from `localStorage`, nullify `auth_token` in the database, and redirect to `/login`.
+
+#### Admin Side
+The admin side is the most important part of this app. Admins must have full control over users and transactions, with all data stored persistently in the database.
+
+##### Admin Credentials
+- Default admin: `username: admin`, `password: admin123` (hash this with bcrypt on first setup).
+
+##### Key Features
+1. **Admin Dashboard (`/admin`)**
+   - Overview: Total users, total transactions, system status.
+   - Quick links: “Create User”, “Manage Users”, “Create Transaction”, “View Transactions”.
+   - Display: Use cards with nice icons (e.g., from `react-icons`) and a clean layout.
+
+2. **Create New User (`/admin/users/create`)**
+   - Form: Username, password, 4-digit PIN, email.
+   - Action: Insert into `users` table with `role: 'user'`, `status: 'active'`, `balance: 0.00`.
+   - Persistence: User must persist in the database and be able to log in immediately after creation.
+   - Success: “User {username} created successfully” with a green checkmark.
+
+3. **Manage Users (`/admin/users`)**
+   - Table: Columns: ID, Username, Email, Password (plain text for visibility), PIN, Balance, Status, Last Login, Actions.
+   - Actions:
+     - **Delete**: Set `status` to `deleted` (soft delete, don’t remove from database unless I manually delete via SQL).
+     - **Toggle Status**: Switch between `active` and `inactive` (inactive users can’t log in).
+   - Visibility: All user info, including passwords, must be visible here for admin oversight.
+
+4. **Create Transaction (`/admin/transactions/create`)**
+   - Form: Select user (dropdown of active users), type (deposit, withdrawal, transfer), amount, custom date/time (input with date picker), recipient info (text for transfer).
+   - Action: Insert into `transactions` table with `created_by` set to admin’s ID. Update user’s `balance` (increase for deposit, decrease for withdrawal/transfer).
+   - Custom Time: Use the admin-set date/time in the `timestamp` field, not the current time.
+   - Persistence: Balance must update and persist in the database. Transaction must appear in history with the custom time.
+
+5. **View Transactions (`/admin/transactions`)**
+   - Table: Columns: ID, User ID, Type, Amount, Recipient Info, Date/Time, Created By, Actions.
+   - Actions: Delete (soft delete by adding a `deleted` flag if needed, or hard delete if I confirm).
+   - Filter: Option to filter by user or date range.
+
+6. **Unique Admin Powers**
+   - Only admins can delete users, make users inactive, or override transaction times.
+   - Admin actions must be logged in the database (e.g., add an `admin_logs` table if needed).
+
+#### User Side
+Users can sign up or be created by admins, log in/out, and perform transactions, with all data stored in the database.
+
+##### Key Features
+1. **Signup (`/signup`)**
+   - Form: Username, password, 4-digit PIN, email.
+   - Action: Insert into `users` table with `role: 'user'`, `status: 'active'`, `balance: 0.00`.
+   - Persistence: User must persist and be visible in admin dashboard with all details (including password, PIN, last login).
+
+2. **Login (`/login`)**
+   - Form: Username, password.
+   - Action: Verify credentials against `users` table. If valid and `status` is `active`, generate a token, store it in `localStorage` and `auth_token` column, and redirect to `/dashboard`.
+   - Persistence: Token in `localStorage` ensures session persists on reload. Update `last_login` in database.
+
+3. **Logout**
+   - Action: Remove token from `localStorage`, set `auth_token` to `NULL` in database, redirect to `/login`.
+   - Persistence: Balance and transaction history must remain unchanged.
+
+4. **User Dashboard (`/dashboard`)**
+   - Display: Balance (e.g., $500.00), recent transactions (last 5 with “View All” link to `/history`), avatar (uploadable from local storage, persists in database as a URL or base64).
+   - Avatar: Allow upload of a photo (e.g., PNG/JPG) from local storage, store in database, and display even after logout/refresh.
+
+5. **Transfer Money (`/transfer`)**
+   - Form: Recipient (username/email for internal, account details for external), amount, transfer type (direct, wire, bank, card, P2P), memo.
+   - Types:
+     - **Direct**: To another Nivalus user (username/email).
+     - **Wire**: SWIFT code, bank name, account number.
+     - **Bank**: Routing number, account number.
+     - **Card**: Card number, cardholder name.
+     - **P2P**: Phone number, platform (e.g., PayPal).
+   - PIN: After filling the form, prompt for the user’s 4-digit PIN (set during signup or by admin).
+   - Loading: On PIN confirmation, show a circular loader counting from 0 to 100 over 20 seconds (e.g., 5% per second).
+   - Completion: After 20 seconds, display a large green checkmark (`FaCheckCircle` from `react-icons`) and “Completed” in green text.
+   - Receipt:
+     - Show: Transaction ID, date/time (current time in user’s country for user-initiated, admin-set for admin-initiated), sender (user’s username), recipient info, amount, memo.
+     - Buttons: “View Receipt” (shows details), “Print” (saves to local storage as `receipt-{id}.txt`), “Close” (returns to dashboard).
+   - Persistence: Deduct amount from user’s balance, update `transactions` table, and ensure new balance persists.
+
+6. **Transaction History (`/history`)**
+   - Table: Date/Time, Type, Amount, Recipient Info, Receipt (link to view/download).
+   - “View All”: Full list of transactions.
+   - Persistence: Stored in database, never resets unless admin deletes.
+
+#### Design and Usability
+- **Themes**: Light (white background, black text) and dark (dark gray background, white text). Auto-detect system preference (use `prefers-color-scheme`).
+- **Responsiveness**: Fit small screens (mobile) and large screens (laptop) using Tailwind’s responsive classes.
+- **Icons**: Use `react-icons` for checkmarks, cards, etc. Allow me to replace the main logo later (store in `public/logo.png`).
+- **Animations**: Smooth transitions for loading (20-second circular orbit), card flips, and button clicks.
+- **Homepage (`/`)**: Unauthenticated, with bank info, signup/login links, and footer (privacy policy, terms, contact).
+- **Footer**: Unauthenticated, always visible, with links to privacy policy, terms of service, and `support@nivalusbank.com`.
+
+#### Key Priorities
+1. **Admin Control**: Admins can create users who can log in/out, set custom transaction times, and manage everything. User data (including passwords) must be visible in the admin dashboard.
+2. **User Signup**: Users can sign up, log in/out, and see their info in the admin dashboard (e.g., last login).
+3. **Persistence**: Balances and transactions must persist in the database, not reset on logout/refresh. Use `localStorage` only for the token.
+4. **Transactions**: Admin and user transactions must update balances correctly (increase for deposits, decrease for withdrawals/transfers) and show in history with receipts.
+5. **Simplicity**: Single server (Node.js/Express), no complex multi-server setup, for easy adjustments later.
+
+#### Why This Matters
+I faced issues before where data reset on refresh or logout, and I don’t want that again. The admin side is critical for managing the bank, and the user side must be intuitive with nice visuals (cards, icons, animations). Use my database to ensure everything is permanent unless I (or the admin) delete it. Make it great, mature, and visually appealing!
+
+Let me know if you need clarification, and please add comments in the code explaining key decisions (e.g., why you chose a library, security choices, or structure) so I can understand and tweak it later.
+
+---
+
+### Notes for You
+- **Database**: The provided PostgreSQL URL is used. Ensure you’ve set up the tables as described (or let the Agent create them).
+- **Replit Setup**: In Replit, add `pg`, `express`, `bcrypt`, `jsonwebtoken` (for JWT), and `dotenv` (for environment variables) to `package.json`. Store the database URL in a `.env` file as `DATABASE_URL`.
+- **Running**: The Agent should configure a single Node.js server with Express and a React frontend, runnable in Replit with `npm start`.
+- **Comments**: Ask the Agent to comment on security (e.g., hashing passwords), persistence (e.g., database vs. memory), and UI choices (e.g., Tailwind classes).
+
+This explanation should give the Replit AI Agent a clear roadmap to rebuild Nivalus Bank according to your vision. Let me know if you want to refine any part before submitting it!
