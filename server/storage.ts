@@ -25,6 +25,7 @@ export interface IStorage {
   updateLastLogin(id: number): Promise<void>;
   updateAuthToken(id: number, token: string | null): Promise<void>;
   updateUserAvatar(id: number, avatar: string): Promise<User>;
+  updateUserThemePreference(id: number, theme: 'light' | 'dark' | 'system'): Promise<User>;
   
   createTransaction(transaction: InsertTransaction): Promise<Transaction>;
   getUserTransactions(userId: number): Promise<Transaction[]>;
@@ -115,6 +116,15 @@ export class DatabaseStorage implements IStorage {
     const [updatedUser] = await db
       .update(users)
       .set({ avatar })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser;
+  }
+
+  async updateUserThemePreference(id: number, theme: 'light' | 'dark' | 'system'): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ theme_preference: theme })
       .where(eq(users.id, id))
       .returning();
     return updatedUser;

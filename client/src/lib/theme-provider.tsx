@@ -1,4 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { apiRequest } from "./queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 type Theme = "dark" | "light" | "system";
 
@@ -26,9 +29,24 @@ export function ThemeProvider({
   storageKey = "nivalus-ui-theme",
   ...props
 }: ThemeProviderProps) {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => {
+      // First try to get theme from user profile, then from local storage
+      if (user?.theme_preference && ["light", "dark", "system"].includes(user.theme_preference)) {
+        return user.theme_preference as Theme;
+      }
+      return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+    }
   );
+
+  // Update theme when user preferences change
+  useEffect(() => {
+    if (user?.theme_preference && ["light", "dark", "system"].includes(user.theme_preference)) {
+      setTheme(user.theme_preference as Theme);
+    }
+  }, [user?.theme_preference]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -50,9 +68,25 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (newTheme: Theme) => {
+      // Save theme to local storage
+      localStorage.setItem(storageKey, newTheme);
+      
+      // Update state
+      setTheme(newTheme);
+      
+      // If user is logged in, save preference to database
+      if (user) {
+        apiRequest("PATCH", "/api/user/theme", { theme: newTheme })
+          .catch((error) => {
+            toast({
+              title: "Theme preference not saved",
+              description: "Could not save your theme preference to your profile.",
+              variant: "destructive",
+            });
+            console.error("Error saving theme preference:", error);
+          });
+      }
     },
   };
 

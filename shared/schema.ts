@@ -6,6 +6,7 @@ import { z } from "zod";
 export const userRoleEnum = pgEnum('user_role', ['user', 'admin']);
 export const userStatusEnum = pgEnum('user_status', ['active', 'inactive', 'deleted']);
 export const transactionTypeEnum = pgEnum('transaction_type', ['deposit', 'withdrawal', 'transfer']);
+export const themePreferenceEnum = pgEnum('theme_preference', ['light', 'dark', 'system']);
 
 // Users table
 export const users = pgTable("users", {
@@ -21,6 +22,7 @@ export const users = pgTable("users", {
   created_at: timestamp("created_at").notNull().defaultNow(),
   auth_token: text("auth_token"),
   avatar: text("avatar"),
+  theme_preference: themePreferenceEnum("theme_preference").notNull().default('system'),
 });
 
 // Transactions table

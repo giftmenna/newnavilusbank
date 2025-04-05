@@ -264,6 +264,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error updating avatar" });
     }
   });
+  
+  // Update user theme preference
+  app.patch("/api/user/theme", authenticateJWT, async (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
+    try {
+      const { theme } = req.body;
+      
+      if (!theme || !['light', 'dark', 'system'].includes(theme)) {
+        return res.status(400).json({ message: "Valid theme preference is required" });
+      }
+      
+      const updatedUser = await storage.updateUserThemePreference(req.user.id, theme);
+      
+      res.json({
+        ...updatedUser,
+        password: undefined,
+        pin: undefined
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error updating theme preference" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

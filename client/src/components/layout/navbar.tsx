@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu, X, User, LogOut, Settings } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -124,6 +125,11 @@ export default function Navbar() {
           
           {/* User Menu and Mobile Menu Button */}
           <div className="flex items-center">
+            {/* Theme Toggle */}
+            <div className="mr-2">
+              <ThemeToggle />
+            </div>
+            
             {user && (
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 {/* User dropdown */}
@@ -273,6 +279,10 @@ export default function Navbar() {
               <a href="#" className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                 Settings
               </a>
+              <div className="flex items-center px-4 py-2">
+                <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
+                <ThemeToggle />
+              </div>
               <button 
                 onClick={() => logoutMutation.mutate()} 
                 className="w-full text-left block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"

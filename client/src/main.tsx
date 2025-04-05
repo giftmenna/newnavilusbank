@@ -7,11 +7,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <ThemeProvider>
         <App />
-      </AuthProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  </QueryClientProvider>
 );
