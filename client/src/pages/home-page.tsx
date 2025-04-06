@@ -13,9 +13,9 @@ export default function HomePage() {
         <section className="relative h-screen flex items-center justify-center overflow-hidden text-white">
           {/* Background with overlay */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary-800/95 to-gray-900/95 mix-blend-multiply dark:mix-blend-normal" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-800/95 to-gray-900/95" />
             <div 
-              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"
+              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center mix-blend-overlay dark:mix-blend-soft-light"
               style={{ backgroundPosition: 'center 30%' }}
             />
           </div>
@@ -499,7 +499,7 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-primary-900 text-white">
+        <section className="py-24 bg-primary-900 text-white dark:bg-primary-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-12">
               <motion.div 
