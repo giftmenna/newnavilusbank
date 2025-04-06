@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useQuery } from "@tanstack/react-query";
-import Navbar from "@/components/layout/navbar";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Footer from "@/components/layout/footer";
 import TransactionTable from "@/components/admin/transaction-table";
 import { Loader2 } from "lucide-react";
@@ -11,31 +10,71 @@ import { Link } from "wouter";
 
 export default function AdminTransactionsPage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [filter, setFilter] = useState({
     type: "all",
     timeframe: "all"
   });
 
-  // Fetch users for dropdown
-  const { data: users } = useQuery({
+  // Fetch users for dropdown with auto-refresh
+  const { 
+    data: users, 
+    refetch: refetchUsers 
+  } = useQuery({
     queryKey: ["/api/admin/users"],
     enabled: !!user && user.role === "admin",
+    staleTime: 2000, // Consider data stale after 2 seconds
+    refetchInterval: 5000, // Auto-refresh every 5 seconds
   });
 
-  // Fetch transactions
-  const { data: transactions, isLoading } = useQuery({
+  // Fetch transactions with auto-refresh
+  const { 
+    data: transactions, 
+    isLoading,
+    refetch: refetchTransactions
+  } = useQuery({
     queryKey: ["/api/admin/transactions"],
     enabled: !!user && user.role === "admin",
+    staleTime: 2000, // Consider data stale after 2 seconds
+    refetchInterval: 3000, // Auto-refresh every 3 seconds
   });
+
+  // Set up automatic refresh for admin data
+  useEffect(() => {
+    if (user && user.role === "admin") {
+      // Immediately refetch data when page loads
+      refetchUsers();
+      refetchTransactions();
+      
+      // Set up interval for refreshing admin data
+      const refreshInterval = setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["/api/admin/transactions"] });
+      }, 5000);
+      
+      return () => clearInterval(refreshInterval);
+    }
+  }, [user, queryClient, refetchUsers, refetchTransactions]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilter({ ...filter, [key]: value });
   };
 
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-2">Admin Access Required</h1>
+            <p className="text-gray-600 dark:text-gray-300">You need admin privileges to view this page.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      <Navbar />
-
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
@@ -85,8 +124,8 @@ export default function AdminTransactionsPage() {
             </div>
             
             {isLoading ? (
-              <div className="flex items-center justify-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="flex items-center justify-center h-20">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
               <TransactionTable 
