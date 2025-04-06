@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Eye, FileDown, Trash2 } from "lucide-react";
+import { MoreHorizontal, Eye, FileDown, Trash2, AlertTriangle, Loader2 } from "lucide-react";
 import { formatDate } from "@/utils/date-utils";
 import { formatCurrency } from "@/utils/format-currency";
 import {
@@ -20,7 +20,19 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -35,6 +47,9 @@ interface TransactionTableProps {
 export default function TransactionTable({ transactions, users, filter, compact = false }: TransactionTableProps) {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [showReceiptDialog, setShowReceiptDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
   
   // Find user by ID
   const getUserById = (id: number) => {
@@ -157,6 +172,51 @@ export default function TransactionTable({ transactions, users, filter, compact 
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+  
+  // Confirm transaction deletion
+  const confirmDelete = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setShowDeleteDialog(true);
+  };
+  
+  // Delete transaction
+  const deleteTransaction = async () => {
+    if (!selectedTransaction) return;
+    
+    try {
+      setIsDeleting(true);
+      
+      const response = await apiRequest(
+        "DELETE", 
+        `/api/admin/transactions/${selectedTransaction.id}`
+      );
+      
+      if (response.ok) {
+        // Invalidate transactions queries to refresh the data
+        queryClient.invalidateQueries({ queryKey: ["/api/admin/transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
+        
+        toast({
+          title: "Transaction deleted",
+          description: `Transaction #${selectedTransaction.id} was successfully deleted.`,
+          variant: "default",
+        });
+      } else {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to delete transaction");
+      }
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete transaction",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
 
   return (
     <>
@@ -215,7 +275,10 @@ export default function TransactionTable({ transactions, users, filter, compact 
                         <FileDown className="mr-2 h-4 w-4" />
                         <span>Download Receipt</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600 dark:text-red-400">
+                      <DropdownMenuItem 
+                        onClick={() => confirmDelete(transaction)} 
+                        className="text-red-600 dark:text-red-400"
+                      >
                         <Trash2 className="mr-2 h-4 w-4" />
                         <span>Delete</span>
                       </DropdownMenuItem>
@@ -315,6 +378,40 @@ export default function TransactionTable({ transactions, users, filter, compact 
             </DialogFooter>
           </DialogContent>
         </Dialog>
+      )}
+      
+      {/* Delete Confirmation Dialog */}
+      {selectedTransaction && (
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center text-red-600 dark:text-red-400">
+                <AlertTriangle className="h-5 w-5 mr-2" />
+                Delete Transaction
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete transaction #{selectedTransaction.id}? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={deleteTransaction}
+                disabled={isDeleting}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete Transaction"
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </>
   );

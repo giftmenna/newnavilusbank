@@ -177,7 +177,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(transactions);
     } catch (error) {
+      console.error("Error fetching transactions:", error);
       res.status(500).json({ message: "Error fetching transactions" });
+    }
+  });
+  
+  // Delete transaction (admin only)
+  app.delete("/api/admin/transactions/:id", authenticateJWT, async (req, res) => {
+    if (req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+    
+    const { id } = req.params;
+    
+    try {
+      const success = await storage.deleteTransaction(parseInt(id));
+      
+      if (success) {
+        res.status(200).json({ message: "Transaction deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Transaction not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+      res.status(500).json({ message: "Error deleting transaction" });
     }
   });
 
@@ -190,9 +213,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
+      console.log("Fetching transactions for user ID:", req.user.id);
       const transactions = await storage.getUserTransactions(req.user.id);
+      console.log("Transactions fetched:", transactions.length);
       res.json(transactions);
     } catch (error) {
+      console.error("Error in /api/transactions:", error);
       res.status(500).json({ message: "Error fetching transactions" });
     }
   });

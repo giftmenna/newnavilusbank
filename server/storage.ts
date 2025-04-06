@@ -34,6 +34,7 @@ export interface IStorage {
     startDate?: Date; 
     endDate?: Date; 
   }): Promise<Transaction[]>;
+  deleteTransaction(id: number): Promise<boolean>;
   
   sessionStore: session.Store;
 }
@@ -168,6 +169,20 @@ export class DatabaseStorage implements IStorage {
     }
     
     return await query.orderBy(desc(transactions.timestamp));
+  }
+  
+  async deleteTransaction(id: number): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(transactions)
+        .where(eq(transactions.id, id))
+        .returning({ id: transactions.id });
+      
+      return result.length > 0;
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+      return false;
+    }
   }
 }
 
