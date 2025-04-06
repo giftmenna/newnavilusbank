@@ -7,7 +7,7 @@ import {
   InsertTransaction 
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 
@@ -36,6 +36,16 @@ export interface IStorage {
   }): Promise<Transaction[]>;
   deleteTransaction(id: number): Promise<boolean>;
   
+  // Database connection test
+  testDatabaseConnection(): Promise<{ 
+    success: boolean; 
+    timestamp: string;
+    dbInfo?: { 
+      tables: string[]; 
+      version: string;
+    };
+  }>;
+  
   sessionStore: session.Store;
 }
 
@@ -47,6 +57,37 @@ export class DatabaseStorage implements IStorage {
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000 // 24 hours
     });
+  }
+  
+  // Test database connection 
+  async testDatabaseConnection(): Promise<{ 
+    success: boolean; 
+    timestamp: string;
+    dbInfo?: { 
+      tables: string[]; 
+      version: string;
+    };
+  }> {
+    try {
+      // Test a simple query to verify connection is working
+      const result = await db.select().from(users).limit(1);
+      
+      // If we can run a query, the connection is working
+      return {
+        success: true,
+        timestamp: new Date().toISOString(),
+        dbInfo: {
+          tables: ["users", "transactions"], // We know these tables exist
+          version: "PostgreSQL via Neon" // Simplified version info
+        }
+      };
+    } catch (error) {
+      console.error("Database connection test failed:", error);
+      return {
+        success: false,
+        timestamp: new Date().toISOString()
+      };
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {

@@ -35,14 +35,14 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
-      <Route path="/about" component={About} />
+      <Route path="/aboutus" component={About} />
       <Route path="/careers" component={Careers} />
       <Route path="/contact" component={Contact} />
-      <Route path="/cookie-policy" component={CookiePolicyPage} />
+      <Route path="/cookiepolicy" component={CookiePolicyPage} />
       <Route path="/press" component={PressPage} />
       <Route path="/security" component={SecurityPage} />
-      <Route path="/privacy-policy" component={PrivacyPolicyPage} />
-      <Route path="/terms-of-service" component={TermsOfServicePage} />
+      <Route path="/privacypolicy" component={PrivacyPolicyPage} />
+      <Route path="/terms" component={TermsOfServicePage} />
       
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/transfer" component={TransferPage} />

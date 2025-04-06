@@ -52,7 +52,7 @@ export default function Footer() {
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Services</h3>
             <ul className="space-y-2 text-sm md:text-base">
               <li>
-                <Link href="/online-banking" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/login" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Online Banking
                 </Link>
               </li>
@@ -62,12 +62,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/savings-accounts" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Savings Accounts
                 </Link>
               </li>
               <li>
-                <Link href="/investments" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/dashboard" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Investments
                 </Link>
               </li>
@@ -78,7 +78,7 @@ export default function Footer() {
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Company</h3>
             <ul className="space-y-2 text-sm md:text-base">
               <li>
-                <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/aboutus" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
@@ -93,18 +93,28 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/press" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                  Press
+                </Link>
+              </li>
+              <li>
                 <Link href="/security" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Security
                 </Link>
               </li> 
               <li>
-                <Link href="/privacy-policy" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/privacypolicy" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/terms" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookiepolicy" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                  Cookies Policy
                 </Link>
               </li>
             </ul>
@@ -114,6 +124,9 @@ export default function Footer() {
         <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
             Nivalus Bank is a registered trademark. All rights reserved.
+          </p>
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
+            Nivalus Bank is a fictitious brand created for educational purposes only.
           </p>
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
             This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.

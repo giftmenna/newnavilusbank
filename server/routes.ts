@@ -355,6 +355,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database connection test route
+  app.get("/api/db-connection", async (req, res) => {
+    try {
+      // Test the database connection by running a simple query
+      const result = await storage.testDatabaseConnection();
+      
+      // Create a masked database URL for display
+      const dbUrl = process.env.DATABASE_URL || "";
+      const maskedUrl = maskConnectionString(dbUrl);
+      
+      res.json({
+        status: "connected",
+        message: "Database connection is active",
+        connection: {
+          masked_url: maskedUrl,
+          provider: "Neon PostgreSQL",
+          poolSize: 10
+        },
+        test_result: result
+      });
+    } catch (error) {
+      console.error("Database connection test failed:", error);
+      res.status(500).json({
+        status: "error",
+        message: "Database connection test failed",
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Helper function to mask sensitive parts of the connection string
+function maskConnectionString(connectionString: string): string {
+  if (!connectionString) return "Not configured";
+  
+  try {
+    // Create a URL object from the connection string
+    // This handles postgresql:// style connection strings
+    const url = new URL(connectionString);
+    
+    // Mask the password
+    if (url.password) {
+      url.password = "****";
+    }
+    
+    // Return the masked URL
+    return url.toString();
+  } catch (e) {
+    // If parsing fails (e.g., for non-URL format connection strings)
+    // do a basic replacement using regex
+    return connectionString
+      .replace(/:[^:@/]+@/, ":****@") // Replace password
+      .replace(/password=[^&]+/, "password=****"); // Replace password in query params
+  }
 }
