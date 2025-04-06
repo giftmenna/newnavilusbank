@@ -53,7 +53,38 @@ export default function Navbar() {
               </Link>
             </div>
             
-            {/* Desktop Navigation */}
+            {/* Public Pages Navigation */}
+            <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
+              <Link href="/about">
+                <a className={`px-3 py-2 text-sm font-medium ${
+                  isActive("/about") 
+                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                }`}>
+                  About
+                </a>
+              </Link>
+              <Link href="/careers">
+                <a className={`px-3 py-2 text-sm font-medium ${
+                  isActive("/careers") 
+                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                }`}>
+                  Careers
+                </a>
+              </Link>
+              <Link href="/contact">
+                <a className={`px-3 py-2 text-sm font-medium ${
+                  isActive("/contact") 
+                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                }`}>
+                  Contact
+                </a>
+              </Link>
+            </nav>
+            
+            {/* Authenticated User Navigation */}
             {user && (
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
                 {user.role === "user" && (
@@ -130,6 +161,16 @@ export default function Navbar() {
               <ThemeToggle />
             </div>
             
+            {/* Sign in button for guests */}
+            {!user && (
+              <div className="hidden sm:block ml-2">
+                <Link href="/auth">
+                  <Button variant="default" size="sm">Sign in</Button>
+                </Link>
+              </div>
+            )}
+            
+            {/* User profile dropdown for authenticated users */}
             {user && (
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 {/* User dropdown */}
@@ -150,14 +191,12 @@ export default function Navbar() {
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </DropdownMenuItem>
+                    <Link href="/profile">
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
                       <LogOut className="mr-2 h-4 w-4" />
@@ -189,108 +228,161 @@ export default function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      {mobileMenuOpen && user && (
+      {mobileMenuOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            {user.role === "user" && (
-              <>
-                <Link href="/dashboard">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/dashboard") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Dashboard
-                  </a>
-                </Link>
-                <Link href="/transfer">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/transfer") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Transfer
-                  </a>
-                </Link>
-                <Link href="/history">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/history") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    History
-                  </a>
-                </Link>
-              </>
-            )}
+            {/* Public pages */}
+            <Link href="/about">
+              <a className={`block px-3 py-2 text-base font-medium ${
+                isActive("/about") 
+                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              }`}>
+                About
+              </a>
+            </Link>
+            <Link href="/careers">
+              <a className={`block px-3 py-2 text-base font-medium ${
+                isActive("/careers") 
+                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              }`}>
+                Careers
+              </a>
+            </Link>
+            <Link href="/contact">
+              <a className={`block px-3 py-2 text-base font-medium ${
+                isActive("/contact") 
+                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+              }`}>
+                Contact
+              </a>
+            </Link>
             
-            {user.role === "admin" && (
+            {/* User specific pages */}
+            {user && (
               <>
-                <Link href="/admin">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/admin") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Dashboard
-                  </a>
-                </Link>
-                <Link href="/admin/users">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/admin/users") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Users
-                  </a>
-                </Link>
-                <Link href="/admin/transactions">
-                  <a className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/admin/transactions") 
-                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Transactions
-                  </a>
-                </Link>
+                {user.role === "user" && (
+                  <>
+                    <Link href="/dashboard">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/dashboard") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        Dashboard
+                      </a>
+                    </Link>
+                    <Link href="/transfer">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/transfer") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        Transfer
+                      </a>
+                    </Link>
+                    <Link href="/history">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/history") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        History
+                      </a>
+                    </Link>
+                  </>
+                )}
+                
+                {user.role === "admin" && (
+                  <>
+                    <Link href="/admin">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/admin") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        Dashboard
+                      </a>
+                    </Link>
+                    <Link href="/admin/users">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/admin/users") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        Users
+                      </a>
+                    </Link>
+                    <Link href="/admin/transactions">
+                      <a className={`block px-3 py-2 text-base font-medium ${
+                        isActive("/admin/transactions") 
+                          ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      }`}>
+                        Transactions
+                      </a>
+                    </Link>
+                  </>
+                )}
               </>
             )}
           </div>
           
-          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center px-4">
-              <div className="flex-shrink-0">
-                <Avatar>
-                  <AvatarImage src={user.avatar || ""} alt={user.username} />
-                  <AvatarFallback className="bg-primary-200 text-primary-700">
-                    {getUserInitials()}
-                  </AvatarFallback>
-                </Avatar>
+          {/* User profile section for authenticated users */}
+          {user && (
+            <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center px-4">
+                <div className="flex-shrink-0">
+                  <Avatar>
+                    <AvatarImage src={user.avatar || ""} alt={user.username} />
+                    <AvatarFallback className="bg-primary-200 text-primary-700">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="ml-3">
+                  <div className="text-base font-medium text-gray-800 dark:text-gray-200">{user.username}</div>
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{user.email}</div>
+                </div>
               </div>
-              <div className="ml-3">
-                <div className="text-base font-medium text-gray-800 dark:text-gray-200">{user.username}</div>
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{user.email}</div>
+              <div className="mt-3 space-y-1">
+                <Link href="/profile">
+                  <a className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Profile
+                  </a>
+                </Link>
+                <div className="flex items-center px-4 py-2">
+                  <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
+                  <ThemeToggle />
+                </div>
+                <button 
+                  onClick={() => logoutMutation.mutate()} 
+                  className="w-full text-left block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Sign out
+                </button>
               </div>
             </div>
-            <div className="mt-3 space-y-1">
-              <a href="#" className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                Profile
-              </a>
-              <a href="#" className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                Settings
-              </a>
-              <div className="flex items-center px-4 py-2">
-                <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
-                <ThemeToggle />
+          )}
+          
+          {/* Guest options */}
+          {!user && (
+            <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="space-y-1">
+                <Link href="/auth">
+                  <a className="block px-4 py-2 text-base font-medium text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Sign in / Register
+                  </a>
+                </Link>
+                <div className="flex items-center px-4 py-2">
+                  <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
+                  <ThemeToggle />
+                </div>
               </div>
-              <button 
-                onClick={() => logoutMutation.mutate()} 
-                className="w-full text-left block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              >
-                Sign out
-              </button>
             </div>
-          </div>
+          )}
         </div>
       )}
     </header>

@@ -8,6 +8,12 @@ import AuthPage from "@/pages/auth-page";
 import DashboardPage from "@/pages/dashboard-page";
 import TransferPage from "@/pages/transfer-page";
 import HistoryPage from "@/pages/history-page";
+import ProfilePage from "@/pages/profile-page";
+import About from "@/pages/About";
+import Careers from "@/pages/Careers";
+import Contact from "@/pages/Contact";
+import CookiePolicyPage from "@/pages/Cookiepolicy";
+import PressPage from "@/pages/Press";
 import AdminDashboard from "@/pages/admin/index";
 import AdminUsers from "@/pages/admin/users/index";
 import AdminCreateUser from "@/pages/admin/users/create";
@@ -20,10 +26,16 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/about" component={About} />
+      <Route path="/careers" component={Careers} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/cookie-policy" component={CookiePolicyPage} />
+      <Route path="/press" component={PressPage} />
       
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/transfer" component={TransferPage} />
       <ProtectedRoute path="/history" component={HistoryPage} />
+      <ProtectedRoute path="/profile" component={ProfilePage} />
       
       <ProtectedRoute path="/admin" component={AdminDashboard} adminOnly />
       <ProtectedRoute path="/admin/users" component={AdminUsers} adminOnly />
