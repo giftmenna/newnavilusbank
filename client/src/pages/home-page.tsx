@@ -3,14 +3,96 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import Footer from "@/components/layout/footer";
 import { motion } from "framer-motion";
-import { ArrowRight, CreditCard, DollarSign, Shield, Leaf, ChevronDown, Target, BarChart, Gift } from "lucide-react";
+import { ArrowRight, CreditCard, DollarSign, Shield, Leaf, ChevronDown, Target, BarChart, Gift, Sparkles } from "lucide-react";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-b from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
+        {/* Animated Welcome Section */}
+        <section className="relative h-screen flex items-center justify-center overflow-hidden text-white">
+          {/* Background with overlay */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 to-gray-900/80 mix-blend-multiply" />
+            <div 
+              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"
+              style={{ backgroundPosition: 'center 30%' }}
+            />
+          </div>
+          
+          {/* Content */}
+          <motion.div 
+            className="relative z-10 text-center max-w-4xl px-4 sm:px-6 py-24"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex justify-center mb-6"
+            >
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              Welcome to <span className="text-primary-300">Nivalus</span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              Redefining your financial experience with cutting-edge technology and personalized solutions.
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              <Link href="#discover">
+                <Button 
+                  size="lg" 
+                  className="rounded-full bg-white text-primary-900 hover:bg-white/90 px-8"
+                >
+                  Discover More
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+          
+          {/* Scroll indicator */}
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ 
+                duration: 1.5, 
+                repeat: Infinity,
+                repeatType: "reverse" 
+              }}
+            >
+              <Link href="#discover">
+                <Button variant="ghost" size="icon" className="rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white">
+                  <ChevronDown className="h-5 w-5" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+        
+        {/* Hero Section with App Demo */}
+        <section id="discover" className="relative bg-gradient-to-b from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
             <motion.div 
@@ -321,22 +403,22 @@ export default function HomePage() {
                 {
                   name: "Sarah Johnson",
                   title: "Small Business Owner",
-                  quote: "Nivalus Banking has completely transformed how I manage my business finances. The transaction tracking and reports have saved me hours of work every month.",
-                  image: "https://randomuser.me/api/portraits/women/32.jpg",
+                  quote: "Nivalus Banking has completely transformed how I manage my business finances. The transaction tracking and budgeting tools have saved me hours each week.",
+                  image: "1",
                   delay: 0
                 },
                 {
-                  name: "David Chen",
-                  title: "Tech Professional",
-                  quote: "The security features give me peace of mind, and the instant transfers are a game-changer. Best banking experience I've ever had!",
-                  image: "https://randomuser.me/api/portraits/men/67.jpg",
+                  name: "Michael Chen",
+                  title: "Freelance Designer",
+                  quote: "As someone who's always on the go, the mobile app is fantastic. Instant transfers and real-time notifications keep me in control of my finances anywhere.",
+                  image: "2",
                   delay: 0.1
                 },
                 {
-                  name: "Maria Rodriguez",
-                  title: "Financial Analyst",
-                  quote: "I've used many banking apps before, but none compare to the clean interface and powerful features of Nivalus. The budgeting tools are exceptional.",
-                  image: "https://randomuser.me/api/portraits/women/44.jpg",
+                  name: "Ava Williams",
+                  title: "Environmental Activist",
+                  quote: "I love how Nivalus lets me track my carbon footprint and contribute to environmental projects. Banking with purpose makes all the difference.",
+                  image: "3",
                   delay: 0.2
                 }
               ].map((testimonial, i) => (
@@ -347,25 +429,33 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: testimonial.delay }}
                 >
-                  <Card className="h-full shadow-lg border-0 dark:bg-gray-800 overflow-visible">
-                    <CardContent className="p-6 h-full flex flex-col relative">
-                      <div className="absolute -top-8 left-6">
-                        <div className="w-16 h-16 rounded-full border-4 border-white dark:border-gray-800 overflow-hidden shadow-lg">
-                          <img 
-                            src={testimonial.image} 
-                            alt={testimonial.name} 
-                            className="w-full h-full object-cover" 
-                          />
+                  <Card className="h-full border-0 shadow-lg dark:bg-gray-800">
+                    <CardContent className="p-6 h-full flex flex-col">
+                      <div className="flex items-center mb-4">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-primary-${parseInt(testimonial.image) * 100} text-white font-bold`}>
+                          {testimonial.name.charAt(0)}
+                        </div>
+                        <div className="ml-4">
+                          <h4 className="text-base font-semibold text-gray-900 dark:text-white">{testimonial.name}</h4>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.title}</p>
                         </div>
                       </div>
-                      <div className="pt-8 pb-4">
-                        <p className="text-gray-700 dark:text-gray-300 italic">
-                          "{testimonial.quote}"
-                        </p>
-                      </div>
-                      <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-                        <p className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.title}</p>
+                      <p className="text-gray-600 dark:text-gray-300 italic">
+                        "{testimonial.quote}"
+                      </p>
+                      <div className="mt-4 flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <motion.svg
+                            key={star}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: testimonial.delay + star * 0.1 }}
+                            className="w-5 h-5 text-yellow-400 fill-current"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </motion.svg>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
@@ -376,73 +466,90 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-primary-50 dark:bg-gray-800 relative overflow-hidden">
-          <motion.div 
-            className="absolute -right-20 -top-20 w-80 h-80 bg-primary-100 dark:bg-primary-900/20 rounded-full"
-            animate={{ 
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, 0],
-            }}
-            transition={{ 
-              duration: 10,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-          />
-          <motion.div 
-            className="absolute -left-20 -bottom-20 w-96 h-96 bg-secondary-100 dark:bg-secondary-900/20 rounded-full"
-            animate={{ 
-              scale: [1, 1.05, 1],
-              rotate: [0, -5, 0],
-            }}
-            transition={{ 
-              duration: 12,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-          />
-
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <motion.div 
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Ready to Transform Your Banking Experience?
-              </h2>
-              <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
-                Join thousands of satisfied customers who have switched to Nivalus Banking.
-              </p>
-              <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/auth?tab=signup">
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button size="lg" className="rounded-full shadow-lg shadow-primary-500/20 px-8 w-full sm:w-auto">
-                      Create Account <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </motion.div>
-                </Link>
-                <Link href="/contact">
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button variant="outline" size="lg" className="rounded-full px-8 w-full sm:w-auto">
-                      Contact Sales
-                    </Button>
-                  </motion.div>
-                </Link>
-              </div>
-            </motion.div>
+        <section className="py-24 bg-primary-900 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+              <motion.div 
+                className="max-w-2xl"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
+                  Ready to Transform Your <br />Banking Experience?
+                </h2>
+                <p className="mt-6 text-xl text-primary-100">
+                  Join thousands of satisfied customers who have already made the switch to smarter, more intuitive banking.
+                </p>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <Link href="/auth?tab=signup">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button size="lg" className="rounded-full bg-white text-primary-900 hover:bg-white/90 px-8">
+                        Open an Account <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
+                    </motion.div>
+                  </Link>
+                  <Link href="/contact">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button variant="outline" size="lg" className="rounded-full border-white text-white hover:bg-white/10 px-8">
+                        Contact Us
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                className="relative"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="relative bg-primary-800/50 backdrop-blur-sm rounded-2xl p-8 border border-primary-700">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary-500/20 rounded-full" />
+                  <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-primary-500/20 rounded-full" />
+                  
+                  <h3 className="text-2xl font-bold mb-4">Why Our Customers Love Us</h3>
+                  <ul className="space-y-4">
+                    {[
+                      "Intuitive, easy-to-use platform",
+                      "24/7 customer support",
+                      "Industry-leading security",
+                      "Personalized financial insights",
+                      "Zero fee account options"
+                    ].map((item, i) => (
+                      <motion.li 
+                        key={i}
+                        className="flex items-center gap-3"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: i * 0.1 }}
+                      >
+                        <div className="h-6 w-6 rounded-full bg-primary-500/30 flex items-center justify-center">
+                          <svg className="h-4 w-4 text-primary-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span>{item}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </section>
       </main>
-
+      
       <Footer />
     </div>
   );
