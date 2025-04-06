@@ -11,7 +11,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertTransactionSchema } from "@shared/schema";
+import { insertTransactionSchema, User } from "@shared/schema";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
@@ -24,7 +24,7 @@ export default function AdminCreateTransactionPage() {
   const [, setLocation] = useLocation();
 
   // Fetch users for dropdown
-  const { data: users, isLoading: isLoadingUsers } = useQuery({
+  const { data: users = [], isLoading: isLoadingUsers } = useQuery<User[]>({
     queryKey: ["/api/admin/users"],
     enabled: !!user && user.role === "admin",
   });

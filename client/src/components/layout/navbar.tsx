@@ -36,6 +36,13 @@ export default function Navbar() {
     return location === path || location.startsWith(`${path}/`);
   };
 
+  // Custom link component to avoid nesting <a> inside <Link>
+  const NavLink = ({ href, children, className }: { href: string, children: React.ReactNode, className: string }) => (
+    <Link href={href}>
+      <span className={`${className} cursor-pointer`}>{children}</span>
+    </Link>
+  );
+
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -56,33 +63,36 @@ export default function Navbar() {
             {/* Public Pages Navigation - only shown when not authenticated or on homepage */}
             {(!user || location === "/") && (
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
-                <Link href="/about">
-                  <a className={`px-3 py-2 text-sm font-medium ${
+                <NavLink 
+                  href="/about"
+                  className={`px-3 py-2 text-sm font-medium ${
                     isActive("/about") 
                       ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                  }`}>
-                    About
-                  </a>
-                </Link>
-                <Link href="/careers">
-                  <a className={`px-3 py-2 text-sm font-medium ${
+                  }`}
+                >
+                  About
+                </NavLink>
+                <NavLink 
+                  href="/careers"
+                  className={`px-3 py-2 text-sm font-medium ${
                     isActive("/careers") 
                       ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                  }`}>
-                    Careers
-                  </a>
-                </Link>
-                <Link href="/contact">
-                  <a className={`px-3 py-2 text-sm font-medium ${
+                  }`}
+                >
+                  Careers
+                </NavLink>
+                <NavLink 
+                  href="/contact"
+                  className={`px-3 py-2 text-sm font-medium ${
                     isActive("/contact") 
                       ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                  }`}>
-                    Contact
-                  </a>
-                </Link>
+                  }`}
+                >
+                  Contact
+                </NavLink>
               </nav>
             )}
             
@@ -91,65 +101,71 @@ export default function Navbar() {
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
                 {user.role === "user" && (
                   <>
-                    <Link href="/dashboard">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                    <NavLink 
+                      href="/dashboard"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/dashboard") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        Dashboard
-                      </a>
-                    </Link>
-                    <Link href="/transfer">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                      }`}
+                    >
+                      Dashboard
+                    </NavLink>
+                    <NavLink 
+                      href="/transfer"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/transfer") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        Transfer
-                      </a>
-                    </Link>
-                    <Link href="/history">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                      }`}
+                    >
+                      Transfer
+                    </NavLink>
+                    <NavLink 
+                      href="/history"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/history") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        History
-                      </a>
-                    </Link>
+                      }`}
+                    >
+                      History
+                    </NavLink>
                   </>
                 )}
                 
                 {user.role === "admin" && (
                   <>
-                    <Link href="/admin">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                    <NavLink 
+                      href="/admin"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/admin") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        Dashboard
-                      </a>
-                    </Link>
-                    <Link href="/admin/users">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                      }`}
+                    >
+                      Dashboard
+                    </NavLink>
+                    <NavLink 
+                      href="/admin/users"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/admin/users") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        Users
-                      </a>
-                    </Link>
-                    <Link href="/admin/transactions">
-                      <a className={`px-3 py-2 text-sm font-medium ${
+                      }`}
+                    >
+                      Users
+                    </NavLink>
+                    <NavLink 
+                      href="/admin/transactions"
+                      className={`px-3 py-2 text-sm font-medium ${
                         isActive("/admin/transactions") 
                           ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                      }`}>
-                        Transactions
-                      </a>
-                    </Link>
+                      }`}
+                    >
+                      Transactions
+                    </NavLink>
                   </>
                 )}
               </nav>
@@ -194,13 +210,13 @@ export default function Navbar() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <Link href="/profile">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
                       </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
+                    <DropdownMenuItem onClick={() => logoutMutation.mutate()} className="cursor-pointer">
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>
@@ -236,33 +252,36 @@ export default function Navbar() {
             {/* Public pages - only shown when not authenticated or on homepage */}
             {(!user || location === "/") && (
               <>
-                <Link href="/about">
-                  <a className={`block px-3 py-2 text-base font-medium ${
+                <NavLink 
+                  href="/about"
+                  className={`block px-3 py-2 text-base font-medium ${
                     isActive("/about") 
                       ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    About
-                  </a>
-                </Link>
-                <Link href="/careers">
-                  <a className={`block px-3 py-2 text-base font-medium ${
+                  }`}
+                >
+                  About
+                </NavLink>
+                <NavLink 
+                  href="/careers"
+                  className={`block px-3 py-2 text-base font-medium ${
                     isActive("/careers") 
                       ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Careers
-                  </a>
-                </Link>
-                <Link href="/contact">
-                  <a className={`block px-3 py-2 text-base font-medium ${
+                  }`}
+                >
+                  Careers
+                </NavLink>
+                <NavLink 
+                  href="/contact"
+                  className={`block px-3 py-2 text-base font-medium ${
                     isActive("/contact") 
                       ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  }`}>
-                    Contact
-                  </a>
-                </Link>
+                  }`}
+                >
+                  Contact
+                </NavLink>
               </>
             )}
             
@@ -271,65 +290,71 @@ export default function Navbar() {
               <>
                 {user.role === "user" && (
                   <>
-                    <Link href="/dashboard">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                    <NavLink 
+                      href="/dashboard"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/dashboard") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        Dashboard
-                      </a>
-                    </Link>
-                    <Link href="/transfer">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                      }`}
+                    >
+                      Dashboard
+                    </NavLink>
+                    <NavLink 
+                      href="/transfer"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/transfer") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        Transfer
-                      </a>
-                    </Link>
-                    <Link href="/history">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                      }`}
+                    >
+                      Transfer
+                    </NavLink>
+                    <NavLink 
+                      href="/history"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/history") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        History
-                      </a>
-                    </Link>
+                      }`}
+                    >
+                      History
+                    </NavLink>
                   </>
                 )}
                 
                 {user.role === "admin" && (
                   <>
-                    <Link href="/admin">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                    <NavLink 
+                      href="/admin"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/admin") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        Dashboard
-                      </a>
-                    </Link>
-                    <Link href="/admin/users">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                      }`}
+                    >
+                      Dashboard
+                    </NavLink>
+                    <NavLink 
+                      href="/admin/users"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/admin/users") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        Users
-                      </a>
-                    </Link>
-                    <Link href="/admin/transactions">
-                      <a className={`block px-3 py-2 text-base font-medium ${
+                      }`}
+                    >
+                      Users
+                    </NavLink>
+                    <NavLink 
+                      href="/admin/transactions"
+                      className={`block px-3 py-2 text-base font-medium ${
                         isActive("/admin/transactions") 
                           ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                           : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}>
-                        Transactions
-                      </a>
-                    </Link>
+                      }`}
+                    >
+                      Transactions
+                    </NavLink>
                   </>
                 )}
               </>
@@ -354,11 +379,12 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="mt-3 space-y-1">
-                <Link href="/profile">
-                  <a className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                    Profile
-                  </a>
-                </Link>
+                <NavLink 
+                  href="/profile"
+                  className="block px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Profile
+                </NavLink>
                 <div className="flex items-center px-4 py-2">
                   <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
                   <ThemeToggle />
@@ -377,11 +403,12 @@ export default function Navbar() {
           {!user && (
             <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
               <div className="space-y-1">
-                <Link href="/auth">
-                  <a className="block px-4 py-2 text-base font-medium text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700">
-                    Sign in / Register
-                  </a>
-                </Link>
+                <NavLink 
+                  href="/auth"
+                  className="block px-4 py-2 text-base font-medium text-indigo-600 dark:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Sign in / Register
+                </NavLink>
                 <div className="flex items-center px-4 py-2">
                   <span className="text-base font-medium text-gray-700 dark:text-gray-300 mr-2">Theme:</span>
                   <ThemeToggle />
