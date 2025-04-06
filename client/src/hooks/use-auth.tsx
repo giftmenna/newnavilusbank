@@ -150,8 +150,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: "You have been successfully logged out.",
       });
       
-      // Redirect to login page
-      setLocation("/auth");
+      // Redirect to home page
+      setLocation("/");
     },
     onError: (error: Error) => {
       toast({

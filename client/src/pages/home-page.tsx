@@ -13,9 +13,9 @@ export default function HomePage() {
         <section className="relative h-screen flex items-center justify-center overflow-hidden text-white">
           {/* Background with overlay */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 to-gray-900/80 mix-blend-multiply dark:mix-blend-normal" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-800/95 to-gray-900/95 mix-blend-multiply dark:mix-blend-normal" />
             <div 
-              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-80 dark:opacity-100"
+              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"
               style={{ backgroundPosition: 'center 30%' }}
             />
           </div>

@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { hashPassword } from "./auth";
-import { insertTransactionSchema } from "@shared/schema";
+import { insertTransactionSchema, type InsertTransaction } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -231,6 +231,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const newBalance = userBalance - numAmount;
       await storage.updateUserBalance(req.user.id, newBalance);
       
+      // Generate a random 7-digit transaction ID (as string format)
+      const transactionId = Math.floor(1000000 + Math.random() * 9000000).toString();
+      
       // Create transaction
       const transaction = await storage.createTransaction({
         user_id: req.user.id,
@@ -239,11 +242,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recipient_info: recipientInfo,
         timestamp: new Date(),
         memo: memo || "",
+        transaction_id: transactionId, // Add the transaction_id
       });
       
       res.status(201).json({
-        transaction,
-        newBalance
+        transaction
       });
     } catch (error) {
       if (error instanceof ZodError) {

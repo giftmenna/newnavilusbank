@@ -10,8 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Upload, Camera, User, Settings, Shield, CreditCard, PiggyBank, BarChart, Leaf } from "lucide-react";
+import { 
+  Loader2, Upload, Camera, User, Settings, Shield, 
+  CreditCard, PiggyBank, BarChart, Leaf, Bell, 
+  Smartphone, ThumbsUp, Lock, Globe, Target, Award, TrendingUp
+} from "lucide-react";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -232,40 +239,146 @@ export default function ProfilePage() {
                 </TabsContent>
                 
                 <TabsContent value="security" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Security Settings</CardTitle>
-                      <CardDescription>
-                        Update your password and security preferences
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="currentPassword">Current Password</Label>
-                        <Input id="currentPassword" type="password" />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-6">
+                    {/* Password Settings */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Password & PIN</CardTitle>
+                        <CardDescription>
+                          Update your password and transaction PIN
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="newPassword">New Password</Label>
-                          <Input id="newPassword" type="password" />
+                          <Label htmlFor="currentPassword">Current Password</Label>
+                          <Input id="currentPassword" type="password" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="newPassword">New Password</Label>
+                            <Input id="newPassword" type="password" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="confirmPassword">Confirm Password</Label>
+                            <Input id="confirmPassword" type="password" />
+                          </div>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="confirmPassword">Confirm Password</Label>
-                          <Input id="confirmPassword" type="password" />
+                          <Label htmlFor="pin">Transaction PIN Code</Label>
+                          <Input id="pin" type="password" maxLength={4} />
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            This PIN is used for transaction verification
+                          </p>
                         </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="pin">PIN Code</Label>
-                        <Input id="pin" type="password" maxLength={4} />
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          This PIN is used for transaction verification
-                        </p>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button>Update Security</Button>
-                    </CardFooter>
-                  </Card>
+                      </CardContent>
+                      <CardFooter>
+                        <Button>Update Credentials</Button>
+                      </CardFooter>
+                    </Card>
+                    
+                    {/* Two-Factor Authentication */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Two-Factor Authentication</CardTitle>
+                        <CardDescription>
+                          Add an extra layer of security to your account
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch id="2fa-sms" />
+                          <Label htmlFor="2fa-sms" className="flex items-center gap-2">
+                            <Smartphone className="h-4 w-4" />
+                            SMS Authentication
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch id="2fa-app" />
+                          <Label htmlFor="2fa-app" className="flex items-center gap-2">
+                            <Lock className="h-4 w-4" />
+                            Authenticator App
+                          </Label>
+                        </div>
+                        <div className="pt-2">
+                          <Button variant="outline" size="sm">
+                            Configure 2FA
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Notification Settings */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Security Notifications</CardTitle>
+                        <CardDescription>
+                          Manage how you receive security alerts
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Label htmlFor="login-alerts" className="flex items-center gap-2">
+                              <Bell className="h-4 w-4" />
+                              Login Alerts
+                            </Label>
+                          </div>
+                          <Switch id="login-alerts" checked />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Label htmlFor="transaction-alerts" className="flex items-center gap-2">
+                              <CreditCard className="h-4 w-4" />
+                              Transaction Alerts
+                            </Label>
+                          </div>
+                          <Switch id="transaction-alerts" checked />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Label htmlFor="security-updates" className="flex items-center gap-2">
+                              <Shield className="h-4 w-4" />
+                              Security Updates
+                            </Label>
+                          </div>
+                          <Switch id="security-updates" checked />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Session Management */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Active Sessions</CardTitle>
+                        <CardDescription>
+                          Manage your currently active sessions
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-3 bg-secondary/20 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <div className="bg-primary/10 p-2 rounded-full">
+                                <Globe className="h-4 w-4 text-primary" />
+                              </div>
+                              <div>
+                                <div className="font-medium">Current Browser</div>
+                                <div className="text-sm text-muted-foreground">
+                                  Last active: Just now
+                                </div>
+                              </div>
+                            </div>
+                            <Badge variant="outline" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 hover:bg-green-100 hover:dark:bg-green-900">
+                              Active
+                            </Badge>
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm" className="mt-4">
+                          Sign Out All Other Sessions
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
                 
                 <TabsContent value="tools" className="mt-6">
@@ -325,31 +438,136 @@ export default function ProfilePage() {
                     </Card>
                   </div>
                   
-                  {/* Gamified Savings Section */}
-                  <Card className="mt-6">
-                    <CardHeader>
-                      <CardTitle>Gamified Savings</CardTitle>
-                      <CardDescription>
-                        Earn rewards and badges as you reach your financial goals
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white">
-                        <h3 className="text-xl font-bold mb-2">Saving Challenge</h3>
-                        <p className="mb-4">Save $500 this month and earn the 'Super Saver' badge!</p>
-                        <div className="w-full bg-white/20 rounded-full h-2.5 mb-4">
-                          <div className="bg-white h-2.5 rounded-full" style={{ width: '45%' }}></div>
+                  {/* Enhanced Financial Tools Section */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <Card className="md:col-span-2">
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <Award className="h-5 w-5 mr-2 text-primary" />
+                          Gamified Savings Challenges
+                        </CardTitle>
+                        <CardDescription>
+                          Earn rewards and badges as you reach your financial goals
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* Challenge 1 */}
+                          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="text-xl font-bold">Saving Challenge</h3>
+                              <Badge className="bg-white/20 text-white">In Progress</Badge>
+                            </div>
+                            <p className="mb-4">Save $500 this month and earn the 'Super Saver' badge!</p>
+                            <Progress value={45} className="h-2 bg-white/20" />
+                            <div className="flex justify-between text-sm mt-2 mb-4">
+                              <span>$225 saved</span>
+                              <span>$500 goal</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <Badge className="bg-white/20 text-white border-none">5 days left</Badge>
+                              <Button className="bg-white text-indigo-600 hover:bg-white/90">
+                                Add Funds
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {/* Challenge 2 */}
+                          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg p-6 text-white">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="text-xl font-bold">Eco Investor</h3>
+                              <Badge className="bg-white/20 text-white">New</Badge>
+                            </div>
+                            <p className="mb-4">Invest in 3 green companies and earn the 'Earth Protector' badge!</p>
+                            <Progress value={0} className="h-2 bg-white/20" />
+                            <div className="flex justify-between text-sm mt-2 mb-4">
+                              <span>0 investments</span>
+                              <span>3 required</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <Badge className="bg-white/20 text-white border-none">30 days left</Badge>
+                              <Button className="bg-white text-emerald-600 hover:bg-white/90">
+                                Join Challenge
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span>$225 saved</span>
-                          <span>$500 goal</span>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Financial Goals */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <Target className="h-5 w-5 mr-2 text-primary" />
+                          Financial Goals
+                        </CardTitle>
+                        <CardDescription>
+                          Track your progress toward important financial milestones
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <div className="font-medium">Emergency Fund</div>
+                            <div className="text-sm">60% complete</div>
+                          </div>
+                          <Progress value={60} className="h-2" />
+                          <div className="flex justify-between mt-1 text-sm text-muted-foreground">
+                            <span>$6,000 saved</span>
+                            <span>$10,000 goal</span>
+                          </div>
                         </div>
-                        <div className="mt-4">
-                          <Button className="bg-white text-indigo-600 hover:bg-white/90">Join Challenge</Button>
+                        
+                        <div>
+                          <div className="flex justify-between mb-2">
+                            <div className="font-medium">Vacation Fund</div>
+                            <div className="text-sm">25% complete</div>
+                          </div>
+                          <Progress value={25} className="h-2" />
+                          <div className="flex justify-between mt-1 text-sm text-muted-foreground">
+                            <span>$1,250 saved</span>
+                            <span>$5,000 goal</span>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        
+                        <Button variant="outline" size="sm" className="w-full">
+                          <PiggyBank className="h-4 w-4 mr-2" />
+                          Add New Goal
+                        </Button>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Financial Insights */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+                          Financial Insights
+                        </CardTitle>
+                        <CardDescription>
+                          Smart recommendations based on your spending habits
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                          <div className="font-medium flex items-center mb-1">
+                            <ThumbsUp className="h-4 w-4 mr-2 text-amber-600 dark:text-amber-400" />
+                            Spending Observation
+                          </div>
+                          <p className="text-sm">You've reduced your dining expenses by 15% this month. Great job with budget management!</p>
+                        </div>
+                        
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                          <div className="font-medium flex items-center mb-1">
+                            <BarChart className="h-4 w-4 mr-2 text-blue-600 dark:text-blue-400" />
+                            Saving Opportunity
+                          </div>
+                          <p className="text-sm">You could save $150 monthly by reducing subscription services. Would you like to see which ones?</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>

@@ -28,6 +28,7 @@ export const users = pgTable("users", {
 // Transactions table
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
+  transaction_id: text("transaction_id"),
   user_id: serial("user_id").references(() => users.id).notNull(),
   type: transactionTypeEnum("type").notNull(),
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
@@ -59,6 +60,7 @@ export const insertTransactionSchema = createInsertSchema(transactions)
     amount: z.coerce.number().positive("Amount must be positive"),
     recipient_info: z.any().optional(),
     timestamp: z.coerce.date(),
+    transaction_id: z.string().optional(),
   });
 
 // Types
