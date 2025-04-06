@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import Footer from "@/components/layout/footer";
 import { motion } from "framer-motion";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 import { ArrowRight, CreditCard, DollarSign, Shield, Leaf, ChevronDown, Target, BarChart, Gift, Sparkles } from "lucide-react";
 
 export default function HomePage() {
@@ -13,9 +14,9 @@ export default function HomePage() {
         <section className="relative h-screen flex items-center justify-center overflow-hidden text-white">
           {/* Background with overlay */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary-800/95 to-gray-900/95" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-800/95 to-gray-900/95 dark:from-primary-900/95 dark:to-gray-900/95" />
             <div 
-              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center mix-blend-overlay dark:mix-blend-soft-light"
+              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center mix-blend-overlay opacity-60 dark:mix-blend-soft-light dark:opacity-40"
               style={{ backgroundPosition: 'center 30%' }}
             />
           </div>
@@ -44,7 +45,15 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Welcome to <span className="text-primary-300">Nivalus</span>
+              Welcome to <span className="text-primary-300">
+                <TypingAnimation 
+                  initialText="Nivalus"
+                  phrases={["Nivalus", "secured platform", "trusted bank", "Nivalus bank"]}
+                  typingSpeed={150}
+                  deletingSpeed={80}
+                  delayBetweenPhrases={3000}
+                />
+              </span>
             </motion.h1>
             
             <motion.p 
@@ -499,7 +508,7 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-primary-900 text-white dark:bg-primary-900">
+        <section className="py-24 bg-primary-900 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-12">
               <motion.div 
@@ -509,10 +518,10 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
+                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-white">
                   Ready to Transform Your <br />Banking Experience?
                 </h2>
-                <p className="mt-6 text-xl text-primary-100">
+                <p className="mt-6 text-xl text-white/80">
                   Join thousands of satisfied customers who have already made the switch to smarter, more intuitive banking.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
@@ -546,11 +555,11 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="relative bg-primary-800/50 backdrop-blur-sm rounded-2xl p-8 border border-primary-700">
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary-500/20 rounded-full" />
-                  <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-primary-500/20 rounded-full" />
+                <div className="relative bg-primary-800/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full" />
+                  <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-white/10 rounded-full" />
                   
-                  <h3 className="text-2xl font-bold mb-4">Why Our Customers Love Us</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-white">Why Our Customers Love Us</h3>
                   <ul className="space-y-4">
                     {[
                       "Intuitive, easy-to-use platform",
@@ -561,14 +570,14 @@ export default function HomePage() {
                     ].map((item, i) => (
                       <motion.li 
                         key={i}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-3 text-white"
                         initial={{ opacity: 0, x: -10 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.3, delay: i * 0.1 }}
                       >
-                        <div className="h-6 w-6 rounded-full bg-primary-500/30 flex items-center justify-center">
-                          <svg className="h-4 w-4 text-primary-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center">
+                          <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polyline points="20 6 9 17 4 12"></polyline>
                           </svg>
                         </div>
