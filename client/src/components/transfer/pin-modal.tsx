@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface PinModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ interface PinModalProps {
 
 export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) {
   const [pin, setPin] = useState(["", "", "", ""]);
+  const [error, setError] = useState("");
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -38,6 +40,7 @@ export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) 
   useEffect(() => {
     if (!isOpen) {
       setPin(["", "", "", ""]);
+      setError("");
     }
   }, [isOpen]);
   
@@ -50,6 +53,9 @@ export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) 
     const newPin = [...pin];
     newPin[index] = value.slice(0, 1); // Only take the first character
     setPin(newPin);
+    
+    // Clear any previous error
+    if (error) setError("");
     
     // If a digit was entered and there's a next input, focus it
     if (value && index < 3) {
@@ -81,6 +87,9 @@ export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) 
     
     setPin(newPin);
     
+    // Clear any previous error
+    if (error) setError("");
+    
     // Focus the appropriate input
     if (pastedDigits.length < 4 && pastedDigits.length > 0) {
       inputRefs[pastedDigits.length].current?.focus();
@@ -95,25 +104,34 @@ export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) 
     // Only submit if all digits are entered
     if (enteredPin.length === 4) {
       onSubmit(enteredPin);
+    } else {
+      setError("Please enter all 4 digits of your PIN.");
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="pin-description">
         <DialogHeader>
           <DialogTitle>Confirm with PIN</DialogTitle>
-          <DialogDescription>
+          <DialogDescription id="pin-description">
             Please enter your 4-digit PIN to confirm this transaction.
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <div className="flex justify-center space-x-2">
+            <Label htmlFor="pin-input-0" className="sr-only">PIN Code</Label>
+            <div 
+              className="flex justify-center space-x-2"
+              role="group"
+              aria-labelledby="pin-label"
+            >
+              <span id="pin-label" className="sr-only">4-digit PIN</span>
               {pin.map((digit, index) => (
                 <Input
                   key={index}
+                  id={`pin-input-${index}`}
                   ref={inputRefs[index]}
                   type="password"
                   inputMode="numeric"
@@ -125,9 +143,15 @@ export default function PinModal({ isOpen, onSubmit, onCancel }: PinModalProps) 
                   className="w-12 h-12 text-center text-xl"
                   required
                   autoComplete="off"
+                  aria-label={`PIN digit ${index + 1}`}
+                  aria-invalid={!!error}
+                  aria-describedby={error ? "pin-error" : undefined}
                 />
               ))}
             </div>
+            {error && (
+              <p id="pin-error" className="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">{error}</p>
+            )}
           </div>
           
           <DialogFooter className="flex justify-end space-x-2">

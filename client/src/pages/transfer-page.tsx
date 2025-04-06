@@ -29,15 +29,23 @@ export default function TransferPage() {
 
   const transferMutation = useMutation({
     mutationFn: async (data: any) => {
+      // Make sure recipientInfo is stringified correctly if it's an object
+      if (data.recipientInfo && typeof data.recipientInfo === 'object') {
+        data.recipientInfo = JSON.stringify(data.recipientInfo);
+      }
+      
+      console.log("Sending transfer data:", data);
       const res = await apiRequest("POST", "/api/transfer", data);
       return await res.json();
     },
     onSuccess: (data) => {
+      console.log("Transfer success:", data);
       setTransactionDetails(data);
       setIsLoadingModalOpen(false);
       setIsSuccessModalOpen(true);
     },
     onError: (error: Error) => {
+      console.error("Transfer error:", error);
       setIsLoadingModalOpen(false);
       toast({
         title: "Transfer failed",

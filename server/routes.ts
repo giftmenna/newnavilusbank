@@ -232,6 +232,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { amount, recipientInfo, transferType, pin, memo } = req.body;
       
+      console.log("Transfer request body:", { 
+        amount, 
+        recipientInfo: typeof recipientInfo, 
+        transferType, 
+        pin: pin ? "***" : undefined, 
+        memo 
+      });
+      
       if (!amount || !recipientInfo || !transferType || !pin) {
         return res.status(400).json({ message: "Missing required fields" });
       }
@@ -260,21 +268,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate a random 7-digit transaction ID (as string format)
       const transactionId = Math.floor(1000000 + Math.random() * 9000000).toString();
       
+      // Parse recipient info if it's a string
+      let parsedRecipientInfo = recipientInfo;
+      if (typeof recipientInfo === 'string') {
+        try {
+          parsedRecipientInfo = JSON.parse(recipientInfo);
+        } catch (e) {
+          console.error("Error parsing recipient info:", e);
+          // If parsing fails, use as-is
+        }
+      }
+      
       // Create transaction
       const transaction = await storage.createTransaction({
         user_id: req.user.id,
         type: "transfer",
         amount: numAmount,
-        recipient_info: recipientInfo,
+        recipient_info: parsedRecipientInfo,
         timestamp: new Date(),
         memo: memo || "",
         transaction_id: transactionId, // Add the transaction_id
       });
       
+      console.log("Transaction created:", transaction);
+      
       res.status(201).json({
         transaction
       });
     } catch (error) {
+      console.error("Transfer error:", error);
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
         return res.status(400).json({ message: validationError.message });

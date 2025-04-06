@@ -10,6 +10,7 @@ import { CheckCircle2, FileText } from "lucide-react";
 import { formatCurrency } from "@/utils/format-currency";
 import { formatDate } from "@/utils/date-utils";
 import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface SuccessModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface SuccessModalProps {
 
 export default function SuccessModal({ isOpen, transactionDetails, onClose }: SuccessModalProps) {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   // Generate PDF-style receipt for download
   const generateReceipt = () => {
@@ -27,138 +29,53 @@ export default function SuccessModal({ isOpen, transactionDetails, onClose }: Su
     const { transaction } = transactionDetails;
     const transactionId = transaction.transaction_id || transaction.id;
     
-    // Create HTML for the receipt
-    const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Transaction Receipt</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          max-width: 800px;
-          margin: 0 auto;
-          padding: 20px;
-          color: #333;
-        }
-        .receipt {
-          border: 1px solid #ddd;
-          padding: 20px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
-          background-color: #fff;
-        }
-        .header {
-          text-align: center;
-          padding-bottom: 20px;
-          border-bottom: 2px solid #eee;
-          margin-bottom: 20px;
-        }
-        .logo {
-          font-size: 24px;
-          font-weight: bold;
-          color: #4f46e5;
-          margin-bottom: 10px;
-        }
-        .title {
-          font-size: 18px;
-          color: #555;
-        }
-        .info-row {
-          display: flex;
-          justify-content: space-between;
-          padding: 8px 0;
-          border-bottom: 1px solid #eee;
-        }
-        .label {
-          font-weight: bold;
-          color: #555;
-        }
-        .value {
-          text-align: right;
-        }
-        .footer {
-          margin-top: 30px;
-          text-align: center;
-          font-size: 14px;
-          color: #888;
-        }
-        .success-mark {
-          text-align: center;
-          font-size: 18px;
-          color: #10b981;
-          margin: 20px 0;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="receipt">
-        <div class="header">
-          <div class="logo">NIVALUS BANK</div>
-          <div class="title">Transaction Receipt</div>
-        </div>
-        
-        <div class="success-mark">✓ Transaction Completed Successfully</div>
-        
-        <div class="info-row">
-          <div class="label">Transaction ID:</div>
-          <div class="value">${transactionId}</div>
-        </div>
-        
-        <div class="info-row">
-          <div class="label">Date & Time:</div>
-          <div class="value">${formatDate(new Date(transaction.timestamp))}</div>
-        </div>
-        
-        <div class="info-row">
-          <div class="label">Transaction Type:</div>
-          <div class="value">${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</div>
-        </div>
-        
-        <div class="info-row">
-          <div class="label">Amount:</div>
-          <div class="value">${formatCurrency(parseFloat(transaction.amount.toString()))}</div>
-        </div>
-        
-        ${transaction.memo ? `
-        <div class="info-row">
-          <div class="label">Memo:</div>
-          <div class="value">${transaction.memo}</div>
-        </div>
-        ` : ''}
-        
-        <div class="info-row">
-          <div class="label">Recipient:</div>
-          <div class="value">${getRecipientName()}</div>
-        </div>
-        
-        <div class="footer">
-          <p>Thank you for using Nivalus Bank!</p>
-          <p>This is an official receipt for your records.</p>
-          <p>Transaction reference: ${transactionId}</p>
-        </div>
-      </div>
-    </body>
-    </html>
-    `;
-    
-    // Create a Blob with the HTML receipt
-    const blob = new Blob([html], { type: 'text/html' });
-    
-    // Create a URL for the Blob
-    const url = URL.createObjectURL(blob);
-    
-    // Open the receipt in a new window (like a print preview)
-    const receiptWindow = window.open(url, '_blank');
-    
-    // Automatically print the receipt once it's loaded
-    if (receiptWindow) {
-      receiptWindow.addEventListener('load', () => {
-        receiptWindow.print();
+    try {
+      // Create a simpler receipt to avoid large HTML causing issues
+      const receiptData = `
+NIVALUS BANK - TRANSACTION RECEIPT
+----------------------------------
+Transaction ID: ${transactionId}
+Date & Time: ${formatDate(new Date(transaction.timestamp))}
+Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+Amount: ${formatCurrency(parseFloat(transaction.amount.toString()))}
+${transaction.memo ? `Memo: ${transaction.memo}` : ''}
+Recipient: ${getRecipientName()}
+
+Thank you for using Nivalus Bank!
+This is an official receipt for your records.
+Transaction reference: ${transactionId}
+      `;
+      
+      // Create a Blob with the receipt text
+      const blob = new Blob([receiptData], { type: 'text/plain' });
+      
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element and trigger download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `receipt-${transactionId}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      // Show success message
+      toast({
+        title: "Receipt Downloaded",
+        description: "The receipt has been downloaded to your device.",
+      });
+    } catch (error) {
+      console.error("Error generating receipt:", error);
+      toast({
+        title: "Error",
+        description: "There was an error generating the receipt. Please try again.",
+        variant: "destructive",
       });
     }
-    
-    // URL will be automatically revoked when the page is unloaded
   };
 
   const handleDone = () => {
@@ -191,13 +108,14 @@ export default function SuccessModal({ isOpen, transactionDetails, onClose }: Su
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="transfer-success-description">
+        <DialogTitle className="sr-only">Transfer Successful</DialogTitle>
         <div className="text-center mb-6">
           <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900">
             <CheckCircle2 className="h-10 w-10 text-green-600 dark:text-green-300" />
           </div>
           <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Transfer Successful!</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Your money is on its way.</p>
+          <p id="transfer-success-description" className="mt-1 text-sm text-gray-500 dark:text-gray-400">Your money is on its way.</p>
         </div>
         
         <div className="border-t border-b border-gray-200 dark:border-gray-700 py-4 mb-6">
