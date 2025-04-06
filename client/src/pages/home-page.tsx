@@ -13,9 +13,9 @@ export default function HomePage() {
         <section className="relative h-screen flex items-center justify-center overflow-hidden text-white">
           {/* Background with overlay */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 to-gray-900/80 mix-blend-multiply" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-900/90 to-gray-900/80 mix-blend-multiply dark:mix-blend-normal" />
             <div 
-              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"
+              className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617842933071-e0082b5905ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-80 dark:opacity-100"
               style={{ backgroundPosition: 'center 30%' }}
             />
           </div>
@@ -185,11 +185,11 @@ export default function HomePage() {
                   <div className="relative z-10 pt-16 pb-8 px-8">
                     <div className="flex justify-between items-center mb-6">
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Current Balance</p>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">$12,348.00</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Live Forex Rates</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Major Currencies</h3>
                       </div>
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center">
-                        <CreditCard className="text-white" />
+                        <DollarSign className="text-white" />
                       </div>
                     </div>
                     
@@ -197,37 +197,70 @@ export default function HomePage() {
                       <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
                         <div className="flex justify-between items-center">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                              <DollarSign className="w-5 h-5" />
+                            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                              €
                             </div>
                             <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900 dark:text-white">Income</p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">Today, 2:35 PM</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">EUR/USD</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Updated 5 min ago</p>
                             </div>
                           </div>
-                          <p className="text-green-600 dark:text-green-400 font-medium">+$250.00</p>
+                          <div className="text-right">
+                            <p className="text-gray-900 dark:text-white font-medium">1.0824</p>
+                            <div className="flex items-center justify-end">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mr-1">Buy: 1.0815</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Sell: 1.0833</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       
                       <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
                         <div className="flex justify-between items-center">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                              <CreditCard className="w-5 h-5" />
+                            <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-bold">
+                              £
                             </div>
                             <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900 dark:text-white">Purchase</p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">Yesterday, 11:20 AM</p>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">GBP/USD</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Updated 5 min ago</p>
                             </div>
                           </div>
-                          <p className="text-red-600 dark:text-red-400 font-medium">-$42.50</p>
+                          <div className="text-right">
+                            <p className="text-gray-900 dark:text-white font-medium">1.2635</p>
+                            <div className="flex items-center justify-end">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mr-1">Buy: 1.2624</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Sell: 1.2646</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 font-bold">
+                              ¥
+                            </div>
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">USD/JPY</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Updated 5 min ago</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-gray-900 dark:text-white font-medium">151.42</p>
+                            <div className="flex items-center justify-end">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mr-1">Buy: 151.32</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Sell: 151.52</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
                     <div className="mt-8">
                       <Button variant="outline" className="w-full rounded-xl" size="lg">
-                        View All Transactions
+                        View All Currency Rates
                       </Button>
                     </div>
                   </div>
