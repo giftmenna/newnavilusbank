@@ -37,7 +37,7 @@ export function DatePicker({ date, setDate, disabled }: DatePickerProps) {
     if (date) {
       const [hours, minutes] = e.target.value.split(":");
       const newDate = new Date(date);
-      newDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+      newDate.setHours(parseInt(hours, 10) || 0, parseInt(minutes, 10) || 0, 0, 0); // Handle null/NaN by defaulting to 0
       setDate(newDate);
     }
   };
@@ -46,7 +46,7 @@ export function DatePicker({ date, setDate, disabled }: DatePickerProps) {
   const handleDateChange = (newDate: Date | undefined) => {
     if (newDate) {
       const [hours, minutes] = time.split(":");
-      newDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+      newDate.setHours(parseInt(hours, 10) || 0, parseInt(minutes, 10) || 0, 0, 0); // Handle null/NaN by defaulting to 0
       setDate(newDate);
     }
   };

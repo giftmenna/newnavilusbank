@@ -41,6 +41,8 @@ export default function AdminCreateTransactionPage() {
       timestamp: new Date(),
       memo: "",
       recipient_details: "",
+      created_by: user?.id, // Set the created_by field to current admin user
+      transaction_id: Math.floor(1000000 + Math.random() * 9000000).toString(), // Generate a random 7-digit transaction ID
     },
   });
 
@@ -48,9 +50,18 @@ export default function AdminCreateTransactionPage() {
   const createTransactionMutation = useMutation({
     mutationFn: async (data: any) => {
       // Format data
+      let recipientInfo = null;
+      try {
+        if (data.recipient_details && data.recipient_details.trim() !== '') {
+          recipientInfo = JSON.parse(data.recipient_details);
+        }
+      } catch (error) {
+        throw new Error("Invalid JSON in recipient details. Please check the format.");
+      }
+
       const transactionData = {
         ...data,
-        recipient_info: data.recipient_details ? JSON.parse(data.recipient_details) : null,
+        recipient_info: recipientInfo,
       };
       delete transactionData.recipient_details;
 
