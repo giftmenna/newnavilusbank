@@ -53,36 +53,38 @@ export default function Navbar() {
               </Link>
             </div>
             
-            {/* Public Pages Navigation */}
-            <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
-              <Link href="/about">
-                <a className={`px-3 py-2 text-sm font-medium ${
-                  isActive("/about") 
-                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
-                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                }`}>
-                  About
-                </a>
-              </Link>
-              <Link href="/careers">
-                <a className={`px-3 py-2 text-sm font-medium ${
-                  isActive("/careers") 
-                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
-                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                }`}>
-                  Careers
-                </a>
-              </Link>
-              <Link href="/contact">
-                <a className={`px-3 py-2 text-sm font-medium ${
-                  isActive("/contact") 
-                    ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
-                    : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
-                }`}>
-                  Contact
-                </a>
-              </Link>
-            </nav>
+            {/* Public Pages Navigation - only shown when not authenticated or on homepage */}
+            {(!user || location === "/") && (
+              <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
+                <Link href="/about">
+                  <a className={`px-3 py-2 text-sm font-medium ${
+                    isActive("/about") 
+                      ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                  }`}>
+                    About
+                  </a>
+                </Link>
+                <Link href="/careers">
+                  <a className={`px-3 py-2 text-sm font-medium ${
+                    isActive("/careers") 
+                      ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                  }`}>
+                    Careers
+                  </a>
+                </Link>
+                <Link href="/contact">
+                  <a className={`px-3 py-2 text-sm font-medium ${
+                    isActive("/contact") 
+                      ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+                  }`}>
+                    Contact
+                  </a>
+                </Link>
+              </nav>
+            )}
             
             {/* Authenticated User Navigation */}
             {user && (
@@ -231,34 +233,38 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            {/* Public pages */}
-            <Link href="/about">
-              <a className={`block px-3 py-2 text-base font-medium ${
-                isActive("/about") 
-                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              }`}>
-                About
-              </a>
-            </Link>
-            <Link href="/careers">
-              <a className={`block px-3 py-2 text-base font-medium ${
-                isActive("/careers") 
-                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              }`}>
-                Careers
-              </a>
-            </Link>
-            <Link href="/contact">
-              <a className={`block px-3 py-2 text-base font-medium ${
-                isActive("/contact") 
-                  ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-              }`}>
-                Contact
-              </a>
-            </Link>
+            {/* Public pages - only shown when not authenticated or on homepage */}
+            {(!user || location === "/") && (
+              <>
+                <Link href="/about">
+                  <a className={`block px-3 py-2 text-base font-medium ${
+                    isActive("/about") 
+                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  }`}>
+                    About
+                  </a>
+                </Link>
+                <Link href="/careers">
+                  <a className={`block px-3 py-2 text-base font-medium ${
+                    isActive("/careers") 
+                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  }`}>
+                    Careers
+                  </a>
+                </Link>
+                <Link href="/contact">
+                  <a className={`block px-3 py-2 text-base font-medium ${
+                    isActive("/contact") 
+                      ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  }`}>
+                    Contact
+                  </a>
+                </Link>
+              </>
+            )}
             
             {/* User specific pages */}
             {user && (
