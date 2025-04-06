@@ -107,10 +107,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const transactionData = insertTransactionSchema.parse(req.body);
+      // Parse and validate the transaction data
+      const validatedData = insertTransactionSchema.parse(req.body);
       
-      // Set the admin as creator
-      transactionData.created_by = req.user.id;
+      // Create the proper transaction data object with all required fields
+      const transactionData: InsertTransaction = {
+        user_id: validatedData.user_id,
+        type: validatedData.type,
+        amount: validatedData.amount,
+        timestamp: validatedData.timestamp || new Date(),
+        created_by: req.user.id,
+        recipient_info: validatedData.recipient_info || null,
+        memo: validatedData.memo || "",
+      };
       
       // Validate user exists
       const user = await storage.getUser(transactionData.user_id);
@@ -119,13 +128,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Process transaction based on type
-      let newBalance = user.balance;
-      const amount = parseFloat(transactionData.amount.toString());
+      const userBalance = parseFloat(user.balance.toString());
+      const amount = transactionData.amount;
+      let newBalance = userBalance;
       
       if (transactionData.type === "deposit") {
-        newBalance = parseFloat(user.balance.toString()) + amount;
+        newBalance = userBalance + amount;
       } else if (transactionData.type === "withdrawal" || transactionData.type === "transfer") {
-        newBalance = parseFloat(user.balance.toString()) - amount;
+        newBalance = userBalance - amount;
         
         if (newBalance < 0) {
           return res.status(400).json({ message: "Insufficient funds" });
@@ -136,8 +146,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.updateUserBalance(user.id, newBalance);
       const transaction = await storage.createTransaction(transactionData);
       
-      res.status(201).json(transaction);
+      res.status(201).json({
+        transaction,
+        message: `Transaction created successfully. User balance updated to ${newBalance}.`
+      });
     } catch (error) {
+      console.error("Admin transaction error:", error);
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
         return res.status(400).json({ message: validationError.message });
