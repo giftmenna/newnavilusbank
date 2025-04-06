@@ -16,6 +16,12 @@ import Careers from "@/pages/Careers";
 import Contact from "@/pages/Contact";
 import CookiePolicyPage from "@/pages/Cookiepolicy";
 import PressPage from "@/pages/Press";
+import SecurityPage from "@/pages/Security";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
+import TermsOfServicePage from "@/pages/TermsOfService";
+import OnlineBankingPage from "@/pages/dashboard/online-banking";
+import SavingsAccountsPage from "@/pages/dashboard/savings-accounts";
+import InvestmentsPage from "@/pages/dashboard/investments";
 import AdminDashboard from "@/pages/admin/index";
 import AdminUsers from "@/pages/admin/users/index";
 import AdminCreateUser from "@/pages/admin/users/create";
@@ -34,11 +40,17 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/cookie-policy" component={CookiePolicyPage} />
       <Route path="/press" component={PressPage} />
+      <Route path="/security" component={SecurityPage} />
+      <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+      <Route path="/terms-of-service" component={TermsOfServicePage} />
       
       <ProtectedRoute path="/dashboard" component={DashboardPage} />
       <ProtectedRoute path="/transfer" component={TransferPage} />
       <ProtectedRoute path="/history" component={HistoryPage} />
       <ProtectedRoute path="/profile" component={ProfilePage} />
+      <ProtectedRoute path="/online-banking" component={OnlineBankingPage} />
+      <ProtectedRoute path="/savings-accounts" component={SavingsAccountsPage} />
+      <ProtectedRoute path="/investments" component={InvestmentsPage} />
       
       <ProtectedRoute path="/admin" component={AdminDashboard} adminOnly />
       <ProtectedRoute path="/admin/users" component={AdminUsers} adminOnly />

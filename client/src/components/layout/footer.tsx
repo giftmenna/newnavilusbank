@@ -52,22 +52,22 @@ export default function Footer() {
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Services</h3>
             <ul className="space-y-2 text-sm md:text-base">
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/online-banking" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Online Banking
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/transfer" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Money Transfers
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/savings-accounts" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Savings Accounts
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/investments" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Investments
                 </Link>
               </li>
@@ -78,32 +78,32 @@ export default function Footer() {
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Company</h3>
             <ul className="space-y-2 text-sm md:text-base">
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/careers" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/security" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Security
                 </Link>
               </li> 
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/privacy-policy" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/auth" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/terms-of-service" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
               </li>
