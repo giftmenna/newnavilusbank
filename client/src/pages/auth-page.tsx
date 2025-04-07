@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocation, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -57,16 +57,18 @@ export default function AuthPage() {
   };
 
   // Registration form
-  const registerForm = useForm<z.infer<typeof insertUserSchema>>({
-    resolver: zodResolver(insertUserSchema.extend({
-      confirmPassword: z.string(),
-      terms: z.boolean().refine(val => val === true, {
-        message: "You must agree to the terms and conditions",
-      }),
-    }).refine(data => data.password === data.confirmPassword, {
-      message: "Passwords don't match",
-      path: ["confirmPassword"],
-    })),
+  const extendedUserSchema = insertUserSchema.extend({
+    confirmPassword: z.string(),
+    terms: z.boolean().refine(val => val === true, {
+      message: "You must agree to the terms and conditions",
+    }),
+  }).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+  
+  const registerForm = useForm<z.infer<typeof extendedUserSchema>>({
+    resolver: zodResolver(extendedUserSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -76,6 +78,10 @@ export default function AuthPage() {
       terms: false,
     },
   });
+  useEffect(() => {
+    console.log("Form State:", registerForm.watch);
+  }, [registerForm.watch]);
+  
 
   const onRegisterSubmit = (formData: any) => {
     const { confirmPassword, terms, ...userData } = formData;
@@ -84,18 +90,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">NB</span>
-                <span className="ml-2 text-xl font-semibold text-primary-500">Nivalus Bank</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    
 
       <main className="flex-grow">
         <div className="flex min-h-[80vh]">
@@ -148,9 +143,12 @@ export default function AuthPage() {
                             <Label htmlFor="remember" className="text-sm">Remember me</Label>
                           </div>
                           
-                          <Button variant="link" size="sm" className="text-sm">
-                            Forgot password?
-                          </Button>
+                          <Link 
+                              to="/forgot-password" 
+                              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                            >
+                              Forgot Password?
+                            </Link>
                         </div>
                       </CardContent>
                       
@@ -251,21 +249,29 @@ export default function AuthPage() {
                         </div>
                         
                         <div className="flex items-center space-x-2">
-                          <Checkbox 
+                        <Checkbox 
                             id="terms" 
-                            {...registerForm.register("terms")} 
-                            disabled={registerMutation.isPending}
-                          />
+                          checked={registerForm.watch("terms")}
+                          onCheckedChange={(checked) => registerForm.setValue("terms", checked === true)}
+                          disabled={registerMutation.isPending}
+                           />
                           <Label htmlFor="terms" className="text-sm">
                             I agree to the{' '}
-                            <Button variant="link" size="sm" className="p-0 h-auto text-sm">
+                            <Link 
+                              to="/terms" 
+                              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                            >
                               Terms of Service
-                            </Button>
+                            </Link>
                             {' '}and{' '}
-                            <Button variant="link" size="sm" className="p-0 h-auto text-sm">
+                            <Link 
+                              to="/privacypolicy" 
+                              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                            >
                               Privacy Policy
-                            </Button>
+                            </Link>
                           </Label>
+
                         </div>
                         {registerForm.formState.errors.terms && (
                           <p className="text-sm text-red-500">{registerForm.formState.errors.terms.message}</p>

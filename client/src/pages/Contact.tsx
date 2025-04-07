@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "@/components/layout/navbar";
+
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,7 +87,7 @@ export default function ContactPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+     
       
       <main className="flex-grow">
         {/* Hero section */}
@@ -115,8 +115,8 @@ export default function ContactPage() {
                   <div className="ml-4">
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">Phone Support</h3>
                     <p className="mt-1 text-gray-600 dark:text-gray-400">
-                      General Inquiries: +1 (800) 123-4567<br />
-                      Customer Service: +1 (800) 987-6543<br />
+                      General Inquiries: +1 (800) 123-4567 (line is down)<br />
+                      Customer Service: +1 (800) 987-6543 (line is down)<br />
                       International: +1 (123) 456-7890
                     </p>
                     <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">

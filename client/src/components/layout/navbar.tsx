@@ -19,6 +19,9 @@ export default function Navbar() {
   const { user, logoutMutation } = useAuth();
   const [location] = useLocation();
 
+  // Add logging for debugging
+  console.log('Navbar render:', { user, location, mobileMenuOpen });
+
   // Get user initials for avatar
   const getUserInitials = () => {
     if (!user) return "??";
@@ -51,12 +54,20 @@ export default function Navbar() {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/">
-                <div className="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold cursor-pointer">
-                  NB
-                </div>
-              </Link>
-              <Link href="/">
-                <span className="ml-2 text-xl font-semibold text-primary-500 cursor-pointer">Nivalus Bank</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="150"
+                  height="50"
+                  viewBox="0 0 150 50"
+                  className="h-12 w-36"
+                >
+                  <g fill="none" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20,10 L30,40 M30,10 L20,40 M40,10 L40,40 M50,10 L50,40 M60,10 L70,25 L60,40 M80,10 L75,25 L80,40 M90,10 L90,40 M90,25 L100,25 M110,10 L110,40 L120,40 M130,10 L130,40" />
+                  </g>
+                  <text x="20" y="45" fill="#FFD700" fontFamily="Inter, sans-serif" fontSize="8" fontWeight="bold">
+                    NIVALUS BANK
+                  </text>
+                </svg>
               </Link>
             </div>
             
@@ -64,9 +75,9 @@ export default function Navbar() {
             {(!user || location === "/") && (
               <nav className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
                 <NavLink 
-                  href="/about"
+                  href="/aboutus"
                   className={`px-3 py-2 text-sm font-medium ${
-                    isActive("/about") 
+                    isActive("/aboutus") 
                       ? "text-primary-500 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
                   }`}
@@ -253,9 +264,9 @@ export default function Navbar() {
             {(!user || location === "/") && (
               <>
                 <NavLink 
-                  href="/about"
+                  href="/aboutus"
                   className={`block px-3 py-2 text-base font-medium ${
-                    isActive("/about") 
+                    isActive("/aboutus") 
                       ? "text-primary-500 dark:text-primary-400 bg-primary-50 dark:bg-gray-800 border-l-4 border-primary-500 dark:border-primary-400" 
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                   }`}

@@ -1,20 +1,35 @@
+// server/db.ts
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import * as schema from "../shared/schema";
+import 'dotenv/config';
 
-// Use the Neon database URL if provided, otherwise fall back to the default DATABASE_URL
-const connectionString = process.env.NEON_DATABASE_URL || process.env.DATABASE_URL;
+// 1. Get connection string
+const connectionString = process.env.NEON_DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error("No database connection string found in environment variables");
+  console.error('❌ Missing NEON_DATABASE_URL in .env file');
+  console.error('Create a .env file with:');
+  console.error('NEON_DATABASE_URL=postgres://user:pass@ep-name-123456.us-east-2.aws.neon.tech/dbname?sslmode=require');
+  process.exit(1);
 }
 
-// Set connection pool parameters to handle concurrent requests
-const sql = postgres(connectionString, { 
-  max: 10, // Maximum number of connections in the pool
-  idle_timeout: 20, // Connections are automatically closed after this many seconds of inactivity
-  connect_timeout: 10, // Timeout in seconds for connection attempts
-  ssl: { rejectUnauthorized: false }, // Required for Neon database connections
+// 2. Create connection
+const sql = postgres(connectionString, {
+  ssl: 'require'
 });
 
-console.log('Database connection established with Neon');
-export const db = drizzle(sql);
+// 3. Test connection immediately
+(async () => {
+  try {
+    const result = await sql`SELECT version()`;
+    console.log('✅ Database connected:', result[0].version);
+  } catch (err) {
+    console.error('❌ Database connection failed:', err instanceof Error ? err.message : err);
+    process.exit(1);
+  }
+})();
+
+// 4. Export drizzle instance
+export const db = drizzle(sql, { schema });
+export default db;

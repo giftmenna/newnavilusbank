@@ -52,7 +52,7 @@ export default function Footer() {
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Services</h3>
             <ul className="space-y-2 text-sm md:text-base">
               <li>
-                <Link href="/login" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                <Link href="/Online-banking" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
                   Online Banking
                 </Link>
               </li>
@@ -125,11 +125,23 @@ export default function Footer() {
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
             Nivalus Bank is a registered trademark. All rights reserved.
           </p>
+          
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
-            Nivalus Bank is a fictitious brand created for educational purposes only.
-          </p>
-          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
-            This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
+            This site is protected by reCAPTCHA and the Google{' '}
+            <Link 
+              to="/privacypolicy" 
+              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+            >
+              Privacy Policy
+            </Link>{' '}
+            and{' '}
+            <Link 
+              to="/terms" 
+              className="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+            >
+              Terms of Service
+            </Link>{' '}
+            apply.
           </p>
         </div>
       </div>

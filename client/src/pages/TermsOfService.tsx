@@ -14,8 +14,8 @@ export default function TermsOfServicePage() {
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
                 Terms of Service
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+                Welcome to Nivalus Bank! Please read our terms of service carefully.
               </p>
             </div>
           </div>

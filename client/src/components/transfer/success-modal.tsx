@@ -22,15 +22,23 @@ export default function SuccessModal({ isOpen, transactionDetails, onClose }: Su
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
+  // Mask account number function
+  const maskAccountNumber = (accountNumber: string) => {
+    if (!accountNumber) return "N/A";
+    const lastFour = accountNumber.slice(-4);
+    return `${"*".repeat(Math.max(0, accountNumber.length - 4))}${lastFour}`;
+  };
+
   // Generate PDF-style receipt for download
   const generateReceipt = () => {
     if (!transactionDetails) return;
     
     const { transaction } = transactionDetails;
     const transactionId = transaction.transaction_id || transaction.id;
+    const senderAccount = transaction.sender_account || "Unknown";
+    const receiverAccount = transaction.recipient_info?.accountNumber || "N/A";
     
     try {
-      // Create a simpler receipt to avoid large HTML causing issues
       const receiptData = `
 NIVALUS BANK - TRANSACTION RECEIPT
 ----------------------------------
@@ -38,32 +46,27 @@ Transaction ID: ${transactionId}
 Date & Time: ${formatDate(new Date(transaction.timestamp))}
 Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
 Amount: ${formatCurrency(parseFloat(transaction.amount.toString()))}
-${transaction.memo ? `Memo: ${transaction.memo}` : ''}
+Sender's Account: ${maskAccountNumber(senderAccount)}
+Recipient's Account: ${receiverAccount}
 Recipient: ${getRecipientName()}
+${transaction.memo ? `Memo: ${transaction.memo}` : ''}
 
 Thank you for using Nivalus Bank!
 This is an official receipt for your records.
 Transaction reference: ${transactionId}
+Generated on: ${formatDate(new Date())}
       `;
       
-      // Create a Blob with the receipt text
       const blob = new Blob([receiptData], { type: 'text/plain' });
-      
-      // Create a URL for the Blob
       const url = URL.createObjectURL(blob);
-      
-      // Create a temporary link element and trigger download
       const a = document.createElement('a');
       a.href = url;
       a.download = `receipt-${transactionId}.txt`;
       document.body.appendChild(a);
       a.click();
-      
-      // Clean up
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       
-      // Show success message
       toast({
         title: "Receipt Downloaded",
         description: "The receipt has been downloaded to your device.",
@@ -93,18 +96,20 @@ Transaction reference: ${transactionId}
     if (info.name) return info.name;
     if (info.username) return info.username;
     if (info.cardHolder) return info.cardHolder;
-    
     return "Recipient";
   };
 
   useEffect(() => {
-    // When modal is closed, reset transactionDetails
     if (!isOpen && transactionDetails) {
       onClose();
     }
   }, [isOpen, transactionDetails, onClose]);
 
   if (!transactionDetails) return null;
+
+  const { transaction } = transactionDetails;
+  const senderAccount = transaction.sender_account || "Unknown";
+  const receiverAccount = transaction.recipient_info?.accountNumber || "N/A";
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -123,19 +128,31 @@ Transaction reference: ${transactionId}
             <div className="py-3 flex justify-between">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Transaction ID</dt>
               <dd className="text-sm font-mono text-gray-900 dark:text-white">
-                {transactionDetails.transaction.transaction_id || transactionDetails.transaction.id}
+                {transaction.transaction_id || transaction.id}
               </dd>
             </div>
             <div className="py-3 flex justify-between">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date & Time</dt>
               <dd className="text-sm text-gray-900 dark:text-white">
-                {formatDate(new Date(transactionDetails.transaction.timestamp))}
+                {formatDate(new Date(transaction.timestamp))}
               </dd>
             </div>
             <div className="py-3 flex justify-between">
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Amount</dt>
               <dd className="text-sm text-gray-900 dark:text-white">
-                {formatCurrency(parseFloat(transactionDetails.transaction.amount.toString()))}
+                {formatCurrency(parseFloat(transaction.amount.toString()))}
+              </dd>
+            </div>
+            <div className="py-3 flex justify-between">
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">From Account</dt>
+              <dd className="text-sm text-gray-900 dark:text-white">
+                {maskAccountNumber(senderAccount)}
+              </dd>
+            </div>
+            <div className="py-3 flex justify-between">
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">To Account</dt>
+              <dd className="text-sm text-gray-900 dark:text-white">
+                {receiverAccount}
               </dd>
             </div>
             <div className="py-3 flex justify-between">
@@ -144,14 +161,20 @@ Transaction reference: ${transactionId}
                 {getRecipientName()}
               </dd>
             </div>
-            {transactionDetails.transaction.memo && (
+            {transaction.memo && (
               <div className="py-3 flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Memo</dt>
                 <dd className="text-sm text-gray-900 dark:text-white">
-                  {transactionDetails.transaction.memo}
+                  {transaction.memo}
                 </dd>
               </div>
             )}
+            <div className="py-3 flex justify-between">
+              <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Transfer Type</dt>
+              <dd className="text-sm text-gray-900 dark:text-white">
+                {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+              </dd>
+            </div>
           </dl>
         </div>
         

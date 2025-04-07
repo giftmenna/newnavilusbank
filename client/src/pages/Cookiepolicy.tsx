@@ -1,18 +1,19 @@
-import Navbar from "@/components/layout/navbar";
+
 import Footer from "@/components/layout/footer";
 
 export default function CookiePolicyPage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+
       
       <main className="flex-grow">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl mb-8">Cookie Policy</h1>
           
           <div className="prose prose-indigo max-w-none dark:prose-invert">
-            <p className="lead text-lg text-gray-600 dark:text-gray-400">
-              Last Updated: April 6, 2023
+            <p>
+              This Cookie Policy explains how Nivalus Bank ("we", "us", or "our") uses cookies and similar technologies on our website. By using our website, you consent to the use of cookies in accordance with this policy.
+              If you do not agree to the use of cookies, you should set your browser settings accordingly or not use our website. If you disable the cookies that we use, this may impact your user experience while on the site.
             </p>
             
             <h2>What Are Cookies</h2>
@@ -80,7 +81,7 @@ export default function CookiePolicyPage() {
             
             <ul>
               <li>Email: privacy@nivalusbank.com</li>
-              <li>Phone: +1 (800) 123-4567</li>
+              <li>Phone: +1 (800) 123-4567 (line is down)</li>
               <li>Mail: Privacy Office, Nivalus Bank, One Financial Plaza, New York, NY 10004, United States</li>
             </ul>
             

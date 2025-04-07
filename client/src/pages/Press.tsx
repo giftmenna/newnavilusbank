@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,7 +91,7 @@ export default function PressPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+     
       
       <main className="flex-grow">
         {/* Hero section */}
