@@ -3,12 +3,11 @@ import fs from "fs";
 import path from "path";
 import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
-import { fileURLToPath } from "url"; // Add this import
+import { fileURLToPath } from "url";
 import viteConfig from "../vite.config";
 
 const viteLogger = createLogger();
 
-// Derive __filename and __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,7 +45,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "../dist/public");
+  const distPath = path.resolve(__dirname, "../dist"); // Fixed to match vite.config.ts
 
   if (!fs.existsSync(distPath)) {
     throw new Error(`Could not find build directory: ${distPath}. Run 'npm run build' first.`);
